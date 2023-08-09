@@ -114,6 +114,8 @@ export default function RunUI({changeModeCallback}) {
 
     const getTitle = () => {
         const titleStr:string = Params.getParam(Project.TITLE_PARAM_ID);
+        console.log( "getTitle: " + titleStr    );
+
         if( titleStr == null || titleStr == "")
             return ("");
         else
@@ -176,7 +178,7 @@ export default function RunUI({changeModeCallback}) {
                     bottom:'2em',
                     fontFamily:'CabinSketch',
                     fontSize:'1.6em',
-                    textShadow:'2px 2px 5px #000000',
+                    textShadow:'0px 0px 20px rgba(0,0,0,1), 0px 0px 10px rgba(0,0,0,1), 0px 0px 2px rgba(0,0,0,1)', // wtf
                     color:'#ffffff',
                     paddingLeft:'0.7em',
                     paddingRight:'0.7em',

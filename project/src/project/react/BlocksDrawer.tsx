@@ -87,7 +87,7 @@ export default function BlockDrawer() {
     else if( type == "draw")
     {
       blocks = moduleTypes.map((moduleType) => { 
-        if( moduleType.name == ModuleType.Party || moduleType.name == ModuleType.Spray ) 
+        if( moduleType.name == ModuleType.Party || moduleType.name == ModuleType.Spray || moduleType.name == ModuleType.Stamp) 
         return (
         <BlockItem 
           key={moduleType.id} 
@@ -205,7 +205,7 @@ export default function BlockDrawer() {
         </Tabs>
         { /* </AppBar> */ }
       <SwipeableViews
-        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+        axis={"x"}
         index={tabValue}
         onChangeIndex={handleChangeIndex}
       >

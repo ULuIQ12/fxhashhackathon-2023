@@ -19,8 +19,7 @@ enum ModuleType
     Rocket = "Rocket",
     Spray = "Particle Spray",
     Party = "Brush",
-    //Pen = "Debug Pen",
-    //Ribbon = "old Ribbon",
+    Stamp = "Stamp",
     WaveMod = "Wave Mod",
     Rotator = "Rotator Mod",
     Perlin = "Perlin Mod",
@@ -64,10 +63,12 @@ class Module
         {id: 3, name: ModuleType.Rocket},
         {id: 4, name: ModuleType.Spray},
         {id: 5, name: ModuleType.Party},
-        {id: 6, name: ModuleType.WaveMod},
-        {id: 7, name: ModuleType.Rotator},
-        {id: 8, name: ModuleType.Perlin},
-        {id: 9, name: ModuleType.Switch},
+        {id: 6, name: ModuleType.Stamp},
+        {id: 7, name: ModuleType.WaveMod},
+        {id: 8, name: ModuleType.Rotator},
+        {id: 9, name: ModuleType.Perlin},
+        {id: 10, name: ModuleType.Switch},
+
     ];
     
     position:Vector2 = new Vector2(); // grid space position
@@ -129,6 +130,8 @@ class Module
                 return new SwitchConfig();
             case ModuleType.Rocket:
                 return new RocketConfig();
+            case ModuleType.Stamp:
+                return new StampConfig();
             default:
                 return null;
         }
@@ -413,6 +416,13 @@ class RocketConfig extends ModConfig
     burn:FloatConfigParam = { id: "burn", name: "Burn duration", desc: "How long will it burn", type: "number", default: 1, value: 1, exposed:true, options: {min: 5, max: 40}};
     powerNoise:FloatConfigParam = { id: "powerNoise", name: "Power noise", desc: "Noise applied to the power", type: "number", default: 1, value: 1, exposed:true,  options: {min: 0, max: 1}};
     directionNoise:FloatConfigParam = { id: "directionNoise", name: "Direction noise", desc: "Noise applied to the direction the rocket is going", type: "number", default: 1, value: 1, exposed:true, options: {min: 0, max: 1}};
+}
+
+class StampConfig extends ModConfig
+{
+    mass:FloatConfigParam = { id: "mass", name: "Mass", desc: "The mass of the block", type: "number", default: 1, value: 1, exposed:false, options: {min: 0, max: 5}};
+    size:FloatConfigParam = { id: "size", name: "Size", desc: "Size of the stamp", type: "number", default: 5, value: 5, exposed:true, options: {min: 1, max: 6}};
+    pressure:FloatConfigParam = { id: "pressure", name: "Pressure", desc: "How much pressure is applied", type: "number", default: 1, value: 1, exposed:true, options: {min: .05, max: 1}};
 }
 
 export {Module, ModuleType, ModuleOrientation, WaveShape, ParticleShape, ColorMode};

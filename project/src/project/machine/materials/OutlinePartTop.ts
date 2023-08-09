@@ -170,16 +170,21 @@ class OutlinePartTop extends MeshBasicMaterial
                 else if( variant == 5.0 )
                     l = 1.0;
 
-                vec2 htDistUV = rotateUV( vPositionW.xy, PI/4.0 );
-                htDistUV *= 0.1;
-                float htDist = fbm( htDistUV, 2 ) * 2.0 - 1.0;
-                
-                vec2 ptUv = rotateUV( vPositionW.xy +vPosition2.xy*0.1 , PI/4.0, vec2(0.0) );
-                ptUv *= 3.0;
-                float c = sdCircle( fract( ptUv )*2.0-1.0, .5);
-                c = 1.0 - step( htDist, c);
+                if( variant != 5.0)
+                {
+                    vec2 htDistUV = rotateUV( vPositionW.xy, PI/4.0 );
+                    htDistUV *= 0.1;
+                    float htDist = fbm( htDistUV, 2 ) * 2.0 - 1.0;
+                    
+                    vec2 ptUv = rotateUV( vPositionW.xy +vPosition2.xy*0.1 , PI/4.0, vec2(0.0) );
+                    ptUv *= 3.0;
+                    float c = sdCircle( fract( ptUv )*2.0-1.0, .5);
+                    c = 1.0 - step( htDist, c);
 
-                diffuseColor.a = l - c;
+                    diffuseColor.a = l - c;
+                }
+                else 
+                    diffuseColor.a = l;
                 
           ` 
             );

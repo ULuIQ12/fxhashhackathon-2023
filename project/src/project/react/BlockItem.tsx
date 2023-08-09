@@ -89,6 +89,9 @@ export default function BlockItem({data, dragStartCallback}) {
             case ModuleType.Rocket:
               icon_url = Assets.ROCKET_ICON;
               break;
+            case ModuleType.Stamp:
+              icon_url = Assets.STAMP_ICON;
+              break;
             default:
               icon_url = Assets.WEIGHT_ICON;
               break;

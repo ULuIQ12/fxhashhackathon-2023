@@ -12,6 +12,7 @@ class Assets
     static PERLIN_ICON = "./assets/icons/icon_perlin.png";
     static SWITCH_ICON = "./assets/icons/icon_switch.png";
     static ROCKET_ICON = "./assets/icons/icon_rocket.png";
+    static STAMP_ICON = "./assets/icons/icon_stamp.png";
 
 
 
@@ -56,6 +57,9 @@ class Assets
                 break; 
             case ModuleType.Switch:
                 url = Assets.SWITCH_ICON;
+                break; 
+            case ModuleType.Stamp:
+                url = Assets.STAMP_ICON;
                 break; 
                  
         }
