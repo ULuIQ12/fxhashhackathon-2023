@@ -15,6 +15,7 @@ import { ParticleSpray } from "./elements/ParticleSpray";
 import { RandTexGen } from "../../helpers/RandTexGen";
 import { PerlinMod } from "./elements/PerlinMod";
 import { Rocket } from "./elements/Rocket";
+import { Build } from "./Build";
 
 
 enum ExecuteState
@@ -243,6 +244,7 @@ class Execute extends Group
         if( !isRunUIVisible())
         {
             setRunUIVisible(true);
+            Build.instance.moduleContainer.visible = true;
         }
         
     }
@@ -703,6 +705,7 @@ class Execute extends Group
         if( performance.now() - this.lastUserInteractionTime  > Execute.USER_INACTIVITY_TIMEOUT && isRunUIVisible() )
         {
             setRunUIVisible(false);
+            Build.instance.moduleContainer.visible = false;
         }
         
     }

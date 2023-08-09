@@ -682,9 +682,6 @@ class Build extends Group
         const ar:number = Math.floor( Math.random()*Object.values(RunAR).length);
         Designer.instance.updateSpaceAR(Object.values(RunAR)[ar]);
         
-        
-
-        //const nbModules:number = Rand.iBetween(10, 25); // max = 7*7 = 49
         const nbModules:number = 10 + Math.floor( Math.random() * 15 ); // max = 7*7 = 49
         const typeTable:ModuleType[] = [];
         for( let i:number = 0; i<2; i++)
@@ -701,7 +698,6 @@ class Build extends Group
 
         typeTable.push(ModuleType.Block, ModuleType.Party, ModuleType.Spray, ModuleType.Rotator, ModuleType.Perlin, ModuleType.Switch);
         
-
         let placedModules:number = 0;
         let lastModule:Module = null;
         while( placedModules < nbModules)
@@ -713,13 +709,9 @@ class Build extends Group
                 if( neighbours.length > 0)
                 {
                     let freeSpace:boolean = false;
-                    //const toTest:Module[] = [...neighbours];
-                    //while( !freeSpace && toTest.length > 0)
                     while( !freeSpace)
                     {
-                        //const index:number = Rand.iBetween(0, toTest.length-1);
                         const index:number = Math.floor( Math.random() * neighbours.length );
-                        //const m:Module = toTest.splice(index, 1)[0];
                         const m:Module = neighbours[index];
                         freeSpace = true;
                         freeModule = neighbours[index];
@@ -727,16 +719,14 @@ class Build extends Group
                     } 
                 }
             }
-            //console.log("found freeModule", freeModule);
+
             if( freeModule == null) 
             {
-                let freeSpace:boolean = false;
-                
+                let freeSpace:boolean = false;                
                 while( !freeSpace)
                 {
                     const px:number = Math.floor( Math.random() * Designer.SPACE_SIZE);
-                    const py:number = Math.floor( Math.random() * Designer.SPACE_SIZE);
-                    //const pos:Vector2 = new Vector2( Rand.iBetween(0, Designer.SPACE_SIZE-1), Rand.iBetween(0, Designer.SPACE_SIZE-1));
+                    const py:number = Math.floor( Math.random() * Designer.SPACE_SIZE)
                     const pos:Vector2 = new Vector2( px, py);
                     const index:number = pos.x + pos.y * Designer.SPACE_SIZE;
                     const m:Module = this.modules[index];
@@ -747,13 +737,10 @@ class Build extends Group
                     }
                 }
             }
-           
 
-            //const typenum:number = Rand.iBetween(1, Object.keys(ModuleType).length -1 );
             const type:ModuleType = typeTable[Math.floor(Math.random() * typeTable.length)];
             if( type == ModuleType.Motor || type == ModuleType.Spray || type == ModuleType.Party)
             {
-                //const numo:number = Rand.iBetween(0, 3);
                 const numo:number = Math.floor(Math.random() * 4);
                 switch(numo)
                 {
@@ -776,7 +763,6 @@ class Build extends Group
             freeModule.type = type;
             
             const typenum:number = Object.values(ModuleType).indexOf(type);
-            //console.log("typenum", Object.keys(ModuleType), type.toString(), typenum);
             const vis:ModuleVis = new ModuleVis(typenum, type);
             const wpos:Vector3 = new Vector3();
             this.gridToWorld(freeModule.position, wpos)
@@ -890,8 +876,6 @@ class Build extends Group
         for( let i:number = 0; i < this.modules.length; i++)
         {
             const m:Module = this.modules[i];
-            //const type:ModuleType = typeTable[Math.floor(Math.random() * typeTable.length)];
-            //const type:ModuleType = Rand.option(typeTable);
             const type:ModuleType = typeTable[Math.floor(Math.random() * typeTable.length)];
             m.type = type;
             const typenum:number = Object.values(ModuleType).indexOf(m.type);

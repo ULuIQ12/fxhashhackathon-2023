@@ -222,8 +222,6 @@ export default function BlockDrawer() {
           {list("mod")}
         </TabPanel>
       </SwipeableViews>
-        
-
     </Box>
   );
 }
