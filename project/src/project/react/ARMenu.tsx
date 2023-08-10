@@ -32,8 +32,8 @@ export default function ARMenu( props ) {
     return (
         <Menu
             anchorEl={props.anchorEl}
-            anchorOrigin={{ vertical: 'center', horizontal: 'right' }}
-            transformOrigin={{ vertical: 'center', horizontal: 'left' }}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'left' }}
             open={props.open}
             onClose={props.onClose}
             sx={{

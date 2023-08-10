@@ -3,6 +3,7 @@ import { IElement } from "./IElement";
 import { Module, PerlinConfig } from '../structs/Module';
 import FastSimplexNoise from '@webvoxel/fast-simplex-noise';
 import { Rand } from '../../../helpers/Rand';
+import { HighlightSharp } from '@mui/icons-material';
 
 class PerlinMod extends Group implements IElement
 {
@@ -41,6 +42,13 @@ class PerlinMod extends Group implements IElement
     {
         const val:number = this.noise.scaled2D(px, py);
         return val;   
+    }
+
+    samplePositionNorm(px:number, py:number ):number
+    {
+        const val:number = this.noise.raw2D(px, py);
+        
+        return val;
     }
     
     update(dt: number, elapsed: number)

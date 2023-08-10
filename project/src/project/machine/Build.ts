@@ -5,7 +5,7 @@ import { isModuleMenuOpen, openModuleMenu } from "../react/ModuleMenu";
 import { isOrientationMenuOpen, openOrientationMenu, closeOrientationMenu } from "../react/OrientationMenu";
 import { openModuleEditMenu, hasAnyMenuOpen } from "../react/BuildUI";
 import { Grid } from "./Grid";
-import { BoolConfigParam, ColorMode, ConfigParam, FloatConfigParam, IntConfigParam, ModConfig, Module, ModuleOrientation, ModuleType, MotorConfig, ParticleShape, ParticlesConfig, PerlinConfig, RibbonConfig, RocketConfig, RotatorConfig, SelectConfigParam, SwitchConfig, WaveConfig, WaveShape } from "./structs/Module";
+import { BoolConfigParam, ColorMode, ConfigParam, FloatConfigParam, IntConfigParam, ModConfig, Module, ModuleOrientation, ModuleType, MotorConfig, ParticleShape, ParticlesConfig, PerlinConfig, RibbonConfig, RocketConfig, RotatorConfig, SelectConfigParam, StampConfig, SwitchConfig, WaveConfig, WaveShape } from "./structs/Module";
 import { Designer, RunAR } from "../Designer";
 import { Rand } from "../../helpers/Rand";
 import { FXContext } from "../../helpers/FXSnippet";
@@ -314,7 +314,7 @@ class Build extends Group
 
     setModuleOrientation(m:Module, orientation:ModuleOrientation)
     {
-        console.log("setModuleOrientation", m, orientation);
+        //console.log("setModuleOrientation", m, orientation);
         m.orientation = orientation;
 
         Designer.OnModulesChanged();
@@ -322,7 +322,7 @@ class Build extends Group
 
     rotateModule(m:Module, direction:number )
     {
-        console.log("rotateModule", m, direction);
+        //console.log("rotateModule", m, direction);
         m.orientation += direction;
         if( m.orientation > 3)
         {   
@@ -396,6 +396,7 @@ class Build extends Group
 
                 this.dragBlock.positionTransition = 1;
                 this.dragBlock.targetPosition.copy( pos);
+                this.SmokePuff( pos);
                 //this.dragBlock.position.copy( pos);
                 this.dragBlock.update(0,0);
             }
@@ -681,6 +682,8 @@ class Build extends Group
         const msg:{}={};
         const ar:number = Math.floor( Math.random()*Object.values(RunAR).length);
         Designer.instance.updateSpaceAR(Object.values(RunAR)[ar]);
+
+        Designer.instance.launchPosition.set( Math.random() * .75 - .35, Math.random() * .75 - .35);
         
         const nbModules:number = 10 + Math.floor( Math.random() * 15 ); // max = 7*7 = 49
         const typeTable:ModuleType[] = [];
@@ -696,7 +699,7 @@ class Build extends Group
             typeTable.push(ModuleType.WaveMod);
         }
 
-        typeTable.push(ModuleType.Block, ModuleType.Party, ModuleType.Spray, ModuleType.Rotator, ModuleType.Perlin, ModuleType.Switch);
+        typeTable.push(ModuleType.Block, ModuleType.Party, ModuleType.Spray, ModuleType.Stamp,  ModuleType.Rotator, ModuleType.Perlin, ModuleType.Switch);
         
         let placedModules:number = 0;
         let lastModule:Module = null;
@@ -846,7 +849,13 @@ class Build extends Group
                     FloatConfigParam.Randomize(c.burn);
                     FloatConfigParam.Randomize(c.delay);
                 }
-                
+                else if( freeModule.type == ModuleType.Stamp)
+                {
+                    const c:StampConfig = config as StampConfig;
+                    FloatConfigParam.Randomize(c.size);
+                    FloatConfigParam.Randomize(c.pressure);
+                    SelectConfigParam.Randomize(c.color);
+                }
             }
             
             lastModule = freeModule;
@@ -915,7 +924,6 @@ class Build extends Group
     {
         this.clearAllBlocks(false);
 
-        //console.log( "Length check for sanity : ", data.length, this.modules.length);
         for( let i:number = 0 ;i< this.modules.length; i++)
         {
             const mdata:any = data[i];
@@ -927,9 +935,6 @@ class Build extends Group
                 continue;
             }
             m.type = type;
-            
-            //console.log( "Orientation : ", mdata.o, Object.keys(ModuleOrientation)[mdata.o] );
-            //const orientation:ModuleOrientation = ModuleOrientation[Object.keys(ModuleOrientation)[mdata.o] ];
             const orientation:ModuleOrientation = mdata.o;
             m.orientation = orientation;
 
@@ -937,10 +942,9 @@ class Build extends Group
             for( let j:number = 0 ; j< configOptions.length; j++)
             {
                 const optStr:string = configOptions[j];
-                //const val:number = parseInt( optStr.substring(2,3) );
                 const val:number = parseInt( optStr );
                 const param:ConfigParam = m.config[ Object.keys(m.config)[j] ];
-                //console.log( "P=", optStr, param, val);
+
                 if( param.type == "number")
                     param.value = val;
                 else if( param.type == "boolean")
@@ -963,9 +967,8 @@ class Build extends Group
                         (param as SelectConfigParam).value = colormode;
                     }
                 }
-                //console.log( m.config[ Object.keys(m.config)[j] ]);
             }
-            //console.log( mdata.t);
+
             const vis:ModuleVis = new ModuleVis(mdata.t, m.type);
             const wpos:Vector3 = new Vector3();
             this.gridToWorld(m.position, wpos)
@@ -988,6 +991,8 @@ class Build extends Group
                 case ModuleType.Party:
                     return true;
                 case ModuleType.Spray:
+                    return true;
+                case ModuleType.Stamp:
                     return true;
                 default:
                     break;

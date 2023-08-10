@@ -114,8 +114,6 @@ export default function RunUI({changeModeCallback}) {
 
     const getTitle = () => {
         const titleStr:string = Params.getParam(Project.TITLE_PARAM_ID);
-        console.log( "getTitle: " + titleStr    );
-
         if( titleStr == null || titleStr == "")
             return ("");
         else

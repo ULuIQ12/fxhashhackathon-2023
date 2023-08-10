@@ -16,6 +16,7 @@ import { RandTexGen } from "../../helpers/RandTexGen";
 import { PerlinMod } from "./elements/PerlinMod";
 import { Rocket } from "./elements/Rocket";
 import { Build } from "./Build";
+import { Stamp } from "./elements/Stamp";
 
 
 enum ExecuteState
@@ -495,6 +496,7 @@ class Execute extends Group
         const defaultColliderMass:number = .5;
         // col group 1 collides only with itself// and walls
         const colliderDesc:ColliderDesc = RAPIER.ColliderDesc.cuboid(.5,.5).setRestitution(1).setCollisionGroups(0x00020002).setMass(.1);
+        const startOffset:Vector2 = Execute.worldSize.clone().multiply(Designer.instance.launchPosition);
         if( !this.useSingleRb) // create a rigid body for each module - not used anymore, but was interesting. 
         {
             /*
@@ -573,7 +575,11 @@ class Execute extends Group
                 for( let j:number = 0; j< g.length; j++)
                 {
                     const m:Module = g[j];
-                    const pos:Vector2 = this.gridToWorld(m.position);
+                    const pos:Vector2 = this.gridToWorld(m.position).add(startOffset);
+
+                    //pos.x += Execute.worldSize.x * Designer.instance.launchPosition.x;
+                    //pos.y += Execute.worldSize.y * Designer.instance.launchPosition.y;
+
                     barycenter = barycenter.add(pos);
                     mass += 1;
                 }
@@ -587,8 +593,14 @@ class Execute extends Group
                 {
                     const m:Module = g[j];
                     m.rb = rb;
-                    m.visOffset.copy(this.gridToWorld(m.position)).sub(barycenter);
-                    const pos:Vector2 = this.gridToWorld(m.position);
+                    //m.visOffset.copy(this.gridToWorld(m.position)).sub(barycenter).add(Execute.worldSize.clone().multiply(Designer.instance.launchPosition));
+                    m.visOffset.copy(this.gridToWorld(m.position)).sub(barycenter).add(startOffset);
+                    const pos:Vector2 = this.gridToWorld(m.position).add(startOffset);
+                    
+                    //pos.x += Execute.worldSize.x * Designer.instance.launchPosition.x;
+                    //pos.y += Execute.worldSize.y * Designer.instance.launchPosition.y;
+                    
+
                     colliderDesc.setTranslation(pos.x - barycenter.x ,pos.y - barycenter.y);
                     const massValue:number = m.config.mass.options.min +  m.config.mass.value*.1 * (m.config.mass.options.max - m.config.mass.options.min);
                     //console.log("mass", massValue, m.config.mass.value, m.config.mass.options.min, m.config.mass.options.max);
@@ -657,6 +669,10 @@ class Execute extends Group
             else if( m.type == ModuleType.Rocket)
             {
                 el = new Rocket(m, this.world);
+            }
+            else if( m.type == ModuleType.Stamp)
+            {
+                el = new Stamp(m);
             }
             /*
             else if( m.type == ModuleType.Ribbon)

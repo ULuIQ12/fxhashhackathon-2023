@@ -95,12 +95,17 @@ class  Project
     static AR_PARAM_ID:string = "ar";
     static TITLE_MAX_LENGTH:number = 32;
     static TITLE_PARAM_ID:string = "title";
+    static SX_PARAM_ID:string = "sx"; // start position x
+    static SY_PARAM_ID:string = "sy"; // start position y
     defineParams() 
     {
         Params.addString(Project.CONFIG_PARAM_ID, "Config", UpdateType.CODE_DRIVEN, "", 0, 512);
         Params.addInt(Project.PALETTE_PARAM_ID, "Palette", UpdateType.CODE_DRIVEN, 0, 99, BigInt(0) );
         Params.addInt(Project.AR_PARAM_ID, "Aspect", UpdateType.CODE_DRIVEN, Object.values(RunAR).indexOf(RunAR.Square), Object.values(RunAR).length-1, BigInt(0) );
         Params.addString(Project.TITLE_PARAM_ID, "Title", UpdateType.CODE_DRIVEN, "", 0, Project.TITLE_MAX_LENGTH);
+        Params.addFloat(Project.SX_PARAM_ID, "sx", UpdateType.CODE_DRIVEN, -.5,.5, 0.01, 0); 
+        Params.addFloat(Project.SY_PARAM_ID, "sy", UpdateType.CODE_DRIVEN, -.5,.5, 0.01, 0);
+
         this.snippet.on(Params.UPDATE_SIGNAL,()=>{},this.onParamsChange);  
         
         this.snippet.params(Params.params);

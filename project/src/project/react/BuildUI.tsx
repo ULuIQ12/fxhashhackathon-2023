@@ -2,7 +2,7 @@ import { Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitl
 import * as React from 'react';
 import ModuleMenu from './ModuleMenu';
 import BlockDrawer from './BlocksDrawer';
-import { Apps, AspectRatio, Cancel, CancelOutlined, Casino, CasinoOutlined, CreateOutlined, Delete, DeleteOutline, DeleteOutlineOutlined, Help, Landscape, Palette, Portrait, PrecisionManufacturing, PriorityHigh, PriorityHighOutlined, QuestionMark, RocketLaunch, SettingsApplications, ShuffleOutlined, Square, Warning } from '@mui/icons-material';
+import { Apps, AspectRatio, Cancel, CancelOutlined, Casino, CasinoOutlined, CenterFocusWeak, CreateOutlined, Delete, DeleteOutline, DeleteOutlineOutlined, Help, Landscape, Palette, Portrait, PrecisionManufacturing, PriorityHigh, PriorityHighOutlined, QuestionMark, RocketLaunch, SettingsApplications, ShuffleOutlined, Square, Warning } from '@mui/icons-material';
 import { Build } from '../machine/Build';
 import EditModule from './EditModule';
 import OrientationMenu from './OrientationMenu';
@@ -13,6 +13,7 @@ import HelpPage from './HelpPage';
 import { Params } from '../../helpers/Params';
 import { Project } from '../Project';
 import ARMenu from './ARMenu';
+import EditStartPos from './EditStartPos';
 
 let openModuleEditMenu = (data) => {};
 
@@ -47,6 +48,9 @@ export default function BuildUI(props) {
 
     const [showAutoWarning, setShowAutoWarning] = React.useState(props.showAutoWarning);
     const [showDeleteWarning, setShowDeleteWarning] = React.useState(props.showDeleteWarning);
+
+    const [startPosOpen, setStartPosOpen] = React.useState(false);
+    const [startPosAnchorEl, setStartPosAnchorEl] = React.useState<null | HTMLElement>(null);
 
     //const [title, setTitle] = React.useState("");
     const [title, setTitle] = React.useState(Params.getParam(Project.TITLE_PARAM_ID));
@@ -227,6 +231,17 @@ export default function BuildUI(props) {
         }
     }
 
+    function handleStartPosOpen(event)
+    {
+        setStartPosAnchorEl(event.currentTarget);
+        setStartPosOpen(true);
+    }
+
+    function handleStartPosClose(event)
+    {
+        setStartPosOpen(false);
+    }
+
     return (
         <Box sx={{bgcolor:'#0f477f'}}>
             <ThemeProvider theme={theme}>
@@ -255,10 +270,10 @@ export default function BuildUI(props) {
                     <Zoom 
                         in={true} 
                         timeout={transitionDuration} 
-                        style={{ transitionDelay:'100ms'}}
+                        style={{ transitionDelay:'50ms'}}
                         unmountOnExit>
                         <Tooltip title="Choose a color palette" placement="right">
-                            <Fab color="primary" aria-label="chosse palette" onClick={handleSelectPaletteOpen}>
+                            <Fab color="primary" aria-label="chosse palette" size='medium' onClick={handleSelectPaletteOpen}>
                                 <Palette />
                             </Fab>
                             
@@ -269,7 +284,7 @@ export default function BuildUI(props) {
                         id="ARButton"
                         in={true} 
                         timeout={transitionDuration} 
-                        style={{ transitionDelay:'200ms'}}
+                        style={{ transitionDelay:'100ms'}}
                         unmountOnExit>
                         <Tooltip title="Edit aspect ratio" placement="right">
                             <Fab color="primary" aria-label="aspectratio" size='medium' onClick={handleAROpen}>
@@ -279,12 +294,25 @@ export default function BuildUI(props) {
                         
                     </Zoom>
                     <Zoom 
+                        id="StartPosButton"
                         in={true} 
                         timeout={transitionDuration} 
-                        style={{ transitionDelay:'300ms'}}
+                        style={{ transitionDelay:'150ms'}}
+                        unmountOnExit>
+                        <Tooltip title="Edit start position" placement="right">
+                            <Fab color="primary" aria-label="startPosition" size='medium' onClick={handleStartPosOpen}>
+                                <CenterFocusWeak />
+                            </Fab>
+                        </Tooltip>
+                        
+                    </Zoom>
+                    <Zoom 
+                        in={true} 
+                        timeout={transitionDuration} 
+                        style={{ transitionDelay:'200ms'}}
                         unmountOnExit>
                         <Tooltip title="Delete your contraption" placement="right">
-                            <Fab color="primary" aria-label="delete" size='medium' onClick={handleDeleteModelOpen}>
+                            <Fab color="primary" aria-label="delete" size='small' onClick={handleDeleteModelOpen}>
                                 <Delete />
                             </Fab>
                         </Tooltip>                        
@@ -292,10 +320,10 @@ export default function BuildUI(props) {
                     <Zoom 
                         in={true} 
                         timeout={transitionDuration} 
-                        style={{ transitionDelay:'400ms'}}
+                        style={{ transitionDelay:'250ms'}}
                         unmountOnExit>
                         <Tooltip title="Generate a new random contraption" placement="right">
-                            <Fab color="primary" aria-label="random" size='medium' onClick={handleAutoClick}>
+                            <Fab color="primary" aria-label="random" size='small' onClick={handleAutoClick}>
                                 <PrecisionManufacturing />
                             </Fab>
                         </Tooltip>
@@ -304,10 +332,10 @@ export default function BuildUI(props) {
                     <Zoom 
                         in={true} 
                         timeout={transitionDuration} 
-                        style={{ transitionDelay:'500ms'}}
+                        style={{ transitionDelay:'300ms'}}
                         unmountOnExit>
                         <Tooltip title="Help" placement="right">
-                            <Fab color="primary" aria-label="help" size='medium' onClick={handleHelpClick}>
+                            <Fab color="primary" aria-label="help" size='small' onClick={handleHelpClick}>
                                 <QuestionMark />
                             </Fab>
                         </Tooltip>
@@ -391,6 +419,7 @@ export default function BuildUI(props) {
                 </DialogActions>
             </Dialog>
             <ARMenu open={aRDialOpen} anchorEl={arAnchorEl} onClose={handleARClose} />
+            <EditStartPos open={startPosOpen} anchorEl={startPosAnchorEl} onClose={handleStartPosClose} />
             <PaletteMenu open={selectPaletteOpen} anchorEl={anchorEl} onClose={handlePaletteClose} />
             <EditModule open={editOpen} onClose={handleEditModuleClose} data={moduleEditData} />
             <HelpPage open={helpOpen} onClose={handleHelpClose} />

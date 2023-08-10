@@ -184,8 +184,9 @@ class ParticleSpray extends Group implements IElement
         if( numWaves > 0)
             modscale /= numWaves;
         
+        const MUL:number = 1/9;
         let scale:number=1- modscale;
-        let forceStrength:number = config.power.options.min +  config.power.value*.1 * (config.power.options.max - config.power.options.min);
+        let forceStrength:number = config.power.options.min +  config.power.value*MUL * (config.power.options.max - config.power.options.min);
         forceStrength = Math.max( 0.2, forceStrength);
         let modAngle:number = 0;
         let modForce:number = 0 ;
@@ -201,8 +202,8 @@ class ParticleSpray extends Group implements IElement
         this.module.vis.additionalRotation = modAngle;
         forceStrength += modForce;
 
-        const pNoise:number = config.powerNoise.options.min +  config.powerNoise.value*.1 * (config.powerNoise.options.max - config.powerNoise.options.min);
-        const dirNoise:number = config.directionNoise.options.min +  config.directionNoise.value*.1 * (config.directionNoise.options.max - config.directionNoise.options.min);
+        const pNoise:number = config.powerNoise.options.min +  config.powerNoise.value*MUL * (config.powerNoise.options.max - config.powerNoise.options.min);
+        const dirNoise:number = config.directionNoise.options.min +  config.directionNoise.value*MUL * (config.directionNoise.options.max - config.directionNoise.options.min);
         forceStrength += Rand.fBetween(- pNoise, pNoise);
         const noiseAngleMax:number = dirNoise * Math.PI /2;
         const directionNoise:number = Rand.fBetween(-noiseAngleMax, noiseAngleMax);
@@ -231,7 +232,7 @@ class ParticleSpray extends Group implements IElement
         
         const rbp:RigidBody = this.world.createRigidBody(rbdesc);
         
-        const sizeVal:number = (isOn)?config.size.options.min +  config.size.value*1/9* (config.size.options.max - config.size.options.min):0;
+        const sizeVal:number = (isOn)?config.size.options.min +  config.size.value*MUL* (config.size.options.max - config.size.options.min):0;
         let collider:Collider;
         if( this.useColliders || this.collideSelf)
         {
@@ -253,7 +254,7 @@ class ParticleSpray extends Group implements IElement
             }
             else if( config.shape.value == ParticleShape.Hexagon)
             {
-                const hexHeight:number = size * 0.86602540378;
+                const hexHeight:number = size * 0.86602540378*.5;
                 const hexWidth:number = size * 0.5;
                 colliderDesc = RAPIER.ColliderDesc.convexHull(new Float32Array([-hexWidth, 0, -hexWidth/2, -hexHeight, hexWidth/2, -hexHeight, hexWidth, 0, hexWidth/2, hexHeight, -hexWidth/2, hexHeight]) );
             }

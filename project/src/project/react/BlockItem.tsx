@@ -21,8 +21,9 @@ export default function BlockItem({data, dragStartCallback}) {
     tooltips[ModuleType.WaveMod] = "Wave Modulator : apply a wave effect to neighbouring blocks";    
     tooltips[ModuleType.Rotator] = "Rotator : periodically rotates the neighbouring blocks";
     tooltips[ModuleType.Perlin] = "Perlin : modify the behaviour of neighbours based on a 2d perlin noise";
-    tooltips[ModuleType.Switch] = "Switch : Activates/Deactivates the neighbouring blocks";
-    tooltips[ModuleType.Rocket] = "Rocket : A one time power burst";
+    tooltips[ModuleType.Switch] = "Switch : activates/Deactivates the neighbouring blocks";
+    tooltips[ModuleType.Rocket] = "Rocket : a one time power burst";
+    tooltips[ModuleType.Stamp] = "Stamp : a tooltip for the stamp";
     
 
     

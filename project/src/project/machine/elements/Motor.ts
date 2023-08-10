@@ -97,7 +97,8 @@ class Motor extends Object3D implements IElement
     }
     dispose()
     {
-
+        this.module = null;
+        this.world = null;
     }
 }
 

@@ -5,6 +5,7 @@ import { Palette } from "./Palette";
 import { Project } from "../Project";
 import { Module, ModuleType } from "./structs/Module";
 import { off } from "process";
+import { Build } from "./Build";
 
 class Grid extends Group
 {
@@ -12,6 +13,7 @@ class Grid extends Group
     position:Vector3;
     gridMaterial:MeshBasicMaterial;
     buildArea:Group;
+    linksContainer:Group;
     links:GridLink[] = [];
     add:any;
     
@@ -96,18 +98,39 @@ class Grid extends Group
             }
         }
         
+        const titleWidth:number = 2048;
+        const titleHeight:number = 256;
+        const titleBitmap:HTMLCanvasElement = document.createElement('canvas');
+        const canvas2dtitle:CanvasRenderingContext2D = titleBitmap.getContext('2d');
+        titleBitmap.width = titleWidth;
+        titleBitmap.height = titleHeight;
+        titleBitmap.style.width = titleBitmap.width + "px";
+        titleBitmap.style.height = titleBitmap.height + "px";
+        
+        canvas2dtitle.font = 'normal normal normal 160px CabinSketch'; //67
+        canvas2dtitle.fillStyle = 'white';
+        canvas2dtitle.strokeStyle = 'white';
+        canvas2dtitle.textAlign = "center";
+        canvas2dtitle.textBaseline = "middle";        
+        canvas2dtitle.imageSmoothingEnabled = true;
+        const titleText:string = Project.PROJECT_NAME;
+        canvas2dtitle.fillText( titleText, titleBitmap.width / 2, titleBitmap.height / 2);
 
-        const titleMat:MeshBasicMaterial = new MeshBasicMaterial({color:0xFFFFFF, transparent:true, opacity:0.95});
-        titleMat.map = new TextureLoader().load("./assets/bptitle2.png");
-        const s:number = 0.0058; 
-        //const titleGeom:BufferGeometry = new PlaneGeometry(1059 * s,180 * s,1,1);
-        const titleGeom:BufferGeometry = new PlaneGeometry(1200 * s,126 * s,1,1);
+        const titleTexture:Texture = new Texture(titleBitmap);
+        titleTexture.needsUpdate = true;
+        const titlescale:number = 0.0035;
+        const sxtitle:number = titleWidth * titlescale;
+        const sytitle:number = titleHeight * titlescale;
+        
+        const titleGeom:BufferGeometry = new PlaneGeometry(sxtitle, sytitle ,1,1);
+        const titleMat:MeshBasicMaterial = new MeshBasicMaterial({color:0xFFFFFF, transparent:true, opacity:0.95, map:titleTexture});
+
+        
         const title:Mesh = new Mesh(titleGeom, titleMat);
         title.frustrumCulled = false;
-        title.position.z = 1.0;
-        title.position.y = 4.1;
+        title.position.set(0, 4.1, 1.0)
         this.buildArea.add(title);
-
+        ////////////////////////////////////////////////////////////
         const iterationWidth:number = 512;
         const iterationHeight:number = 256;
         const iterationBitmap:HTMLCanvasElement = document.createElement('canvas');
@@ -149,9 +172,11 @@ class Grid extends Group
     createLinks()
     {
         
-
+        this.linksContainer = new Group();
+        this.linksContainer.visible = false;
+        this.buildArea.add(this.linksContainer);
         const linkGeometry:PlaneGeometry = new PlaneGeometry(.15, .2, 1, 1);
-        const linkTex:Texture = new TextureLoader().load("./assets/link.png");
+        const linkTex:Texture = new TextureLoader().load("./assets/link.png", (tex:Texture) => {Build.instance.grid.linksContainer.visible = true;}); // quite dirty
         const linkMat:MeshBasicMaterial = new MeshBasicMaterial({color:0xFFFFFF,transparent:true, opacity:0, map:linkTex});
        
         for( let j:number = 0 ;j < Designer.SPACE_SIZE;j++)
@@ -169,7 +194,7 @@ class Grid extends Group
                     glv.mesh.visible = false;
                 else 
                 {
-                    this.buildArea.add(linkMeshV)
+                    this.linksContainer.add(linkMeshV)
                 }
 
                 this.links.push(glv);
@@ -188,7 +213,7 @@ class Grid extends Group
                     glh.mesh.visible = false;
                 else 
                 {
-                    this.buildArea.add(linkMeshH);
+                    this.linksContainer.add(linkMeshH);
                 }
                 this.links.push(glh);
             }   

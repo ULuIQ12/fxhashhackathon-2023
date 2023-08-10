@@ -421,10 +421,18 @@ class RocketConfig extends ModConfig
 class StampConfig extends ModConfig
 {
     mass:FloatConfigParam = { id: "mass", name: "Mass", desc: "The mass of the block", type: "number", default: 1, value: 1, exposed:false, options: {min: 0, max: 5}};
-    size:FloatConfigParam = { id: "size", name: "Size", desc: "Size of the stamp", type: "number", default: 5, value: 5, exposed:true, options: {min: 1, max: 6}};
-    pressure:FloatConfigParam = { id: "pressure", name: "Pressure", desc: "How much pressure is applied", type: "number", default: 1, value: 1, exposed:true, options: {min: .05, max: 1}};
+    color:SelectConfigParam = {id:"color", name:"Color", desc:"The color of the ribbon", type:"select", default: ColorMode.Random, value: ColorMode.Random, exposed:true, options: [
+        {name:"Random", value:ColorMode.Random},
+        {name:"Rotating", value:ColorMode.Rotating},
+        {name:"Palette 1", value:ColorMode.Palette1},
+        {name:"Palette 2", value:ColorMode.Palette2},
+        {name:"Palette 3", value:ColorMode.Palette3},
+        {name:"Palette 4", value:ColorMode.Palette4},
+    ]};
+    size:FloatConfigParam = { id: "size", name: "Size", desc: "Size of the stamp", type: "number", default: 5, value: 5, exposed:true, options: {min: 5, max: 20}};
+    pressure:FloatConfigParam = { id: "pressure", name: "Pressure", desc: "How much pressure is applied", type: "number", default: 1, value: 1, exposed:true, options: {min: .05, max: 0.5}};
 }
 
 export {Module, ModuleType, ModuleOrientation, WaveShape, ParticleShape, ColorMode};
 export {ConfigParam, FloatConfigParam, IntConfigParam, BoolConfigParam, SelectConfigParam};
-export {ModConfig, WeightConfig, MotorConfig, RibbonConfig, ParticlesConfig, WaveConfig, RotatorConfig, PerlinConfig, SwitchConfig, RocketConfig };
+export {ModConfig, WeightConfig, MotorConfig, RibbonConfig, ParticlesConfig, WaveConfig, RotatorConfig, PerlinConfig, SwitchConfig, RocketConfig, StampConfig };

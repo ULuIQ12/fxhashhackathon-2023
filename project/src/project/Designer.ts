@@ -34,6 +34,8 @@ class Designer extends Group
     execute:Execute;
     currentMode:string = "build";
     currentAR:RunAR = RunAR.Square;
+    launchPosition:Vector2 = new Vector2(0,0);
+
     constructor()
     {
         super();
@@ -92,6 +94,15 @@ class Designer extends Group
     {
         if( this.build != undefined)
             this.build.updateTitle(title);
+    }
+
+    updateLaunchPos(pos:Vector2)
+    {
+        this.launchPosition.copy(pos);
+        const msg:{} = {};
+        msg[Project.SX_PARAM_ID] = this.launchPosition.x;
+        msg[Project.SY_PARAM_ID] = this.launchPosition.y;
+        Params.snippet.emit(Params.UPDATE_SIGNAL, msg );
     }
 
     updateSpaceAR(val:RunAR, resize:boolean = true)
@@ -323,6 +334,8 @@ class Designer extends Group
         msg[Project.CONFIG_PARAM_ID] = str;
         msg[Project.AR_PARAM_ID] = BigInt( Object.values(RunAR).indexOf(this.currentAR) );
         msg[Project.PALETTE_PARAM_ID] = BigInt( Palette.selectedPalette );
+        msg[Project.SX_PARAM_ID] = this.launchPosition.x;
+        msg[Project.SY_PARAM_ID] = this.launchPosition.y;
 
         if( Project.GetContext() == FXContext.MINTING)
             Project.instance.snippet.emit(Params.UPDATE_SIGNAL,msg);
@@ -342,6 +355,11 @@ class Designer extends Group
         const title:string = Params.getParam(Project.TITLE_PARAM_ID);
         if( title != "")
             this.build.updateTitle(title, true);
+
+        const sx:number = Number( Params.getParam(Project.SX_PARAM_ID) );
+        const sy:number = Number( Params.getParam(Project.SY_PARAM_ID) );
+        if( sx != undefined && sy != undefined)
+            this.launchPosition.set(sx,sy);
 
         const crushed:string = Params.getParam(Project.CONFIG_PARAM_ID);
         if( crushed == undefined)

@@ -99,10 +99,12 @@ export default function PaletteMenu( props ) {
             'aria-labelledby': 'long-button',
             }}
             anchorEl={props.anchorEl}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'left' }}
             open={props.open}
             onClose={handleClose}
             variant='selectedMenu'
-            sx={{padding:0, margin:0}}
+            sx={{padding:0, margin:0, marginLeft:2}}
             PaperProps={{
                 sx:{
                     borderRadius:'4px',
