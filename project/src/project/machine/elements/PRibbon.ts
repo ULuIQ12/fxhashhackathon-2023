@@ -84,7 +84,9 @@ class PRibbon extends Group implements IElement
             this.color.copy( Rand.option( Palette.colors ) );
         else if( config.color.value != ColorMode.Rotating)
         {
+            
             const c:number = Object.values(ColorMode).indexOf( config.color.value as ColorMode) - 2;
+            console.log( "pouet = " , config.color.value, c )
             this.color.copy(Palette.colors[c]);
         }
         else 
@@ -161,6 +163,7 @@ class PRibbon extends Group implements IElement
         super.add(mesh);
     }
 
+    firstskipped:boolean = false;
     update(dt: number, elapsed: number): void
     {        
         if( this.stepCounter < this.maxSteps && !this.isOOBV() )
@@ -168,11 +171,22 @@ class PRibbon extends Group implements IElement
             if(this.spawnTiming != -1)
             {
                 if( this.spawnCounter%this.spawnTiming==0)
-                    this.launchParticle();
+                {
+                    if( !this.firstskipped) // skip the first, due to how the physics engine is initialized, and the start offset
+                        this.firstskipped = true;
+                    else 
+                        this.launchParticle();
+                }
                 this.spawnCounter++;
             }
             else 
-                this.launchParticle();            
+            {
+                if( !this.firstskipped) // skip the first, due to how the physics engine is initialized, and the start offset
+                    this.firstskipped = true;
+                else 
+                    this.launchParticle();
+            }
+                
         }
 
         this.updateMesh();
@@ -573,7 +587,7 @@ class PRibbon extends Group implements IElement
         part.rb = rbp;
         part.width = totalWidth;  
         //part.collider = null;
-        part.depth = 1 + Math.sin( this.stepCounter / 100 );
+        part.depth = 1 + Math.sin( this.stepCounter / 100 )*3;
         this.particles.push(part);
         
         this.stepCounter++;

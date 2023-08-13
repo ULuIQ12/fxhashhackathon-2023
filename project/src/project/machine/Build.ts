@@ -855,6 +855,7 @@ class Build extends Group
                     FloatConfigParam.Randomize(c.size);
                     FloatConfigParam.Randomize(c.pressure);
                     SelectConfigParam.Randomize(c.color);
+                    SelectConfigParam.Randomize(c.shape);
                 }
             }
             

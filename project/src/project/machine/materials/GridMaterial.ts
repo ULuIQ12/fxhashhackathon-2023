@@ -9,6 +9,8 @@ class GridMaterial extends MeshBasicMaterial
     onBeforeCompile:any;
     constructor(parameters:MeshBasicMaterialParameters)
     {
+        parameters.forceSinglePass = true;
+        
         super(parameters);
         this.opacity = 1;
         this.transparent = true;

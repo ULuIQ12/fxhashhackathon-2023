@@ -4,6 +4,7 @@ import { Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle,
 import { BoolConfigParam, ColorMode, ConfigParam, FloatConfigParam, ModConfig, Module, SelectConfigParam, WaveConfig, WaveShape } from '../machine/structs/Module';
 import { Designer } from '../Designer';
 import { Palette } from '../machine/Palette';
+import { Color } from 'three';
 import { Build, CancelOutlined, SaveAlt, SaveAltOutlined, SaveOutlined, Shuffle } from '@mui/icons-material';
 
 
@@ -26,8 +27,9 @@ export default function EditModule( props ) {
     React.useEffect(() => {
 
         moduleData.current = props.data;
+        //console.log("EditModule: useEffect: props.data = ", props.data);
         setConfigCopy({...props.data.config});
-    }, [props.data]);
+    }, [props.data, props]);
 
     const handleSave = () => 
     {
@@ -175,9 +177,11 @@ export default function EditModule( props ) {
             }
             else 
             {
-                const index:number = parseInt( (key.substring(key.length-1, key.length) as string) ) -1;
+                const index:number = parseInt( (key.substring(key.length-1, key.length) as string) ) ;
+                console.log( "indexCCol" , index);
+                const pval:number = Palette.paletteValues[Palette.selectedPalette][index];
+                colors.push("#" + new Color(pval).getHexString());
                 
-                colors.push("#" + Palette.colors[index].getHexString());
             }
         }
         return (

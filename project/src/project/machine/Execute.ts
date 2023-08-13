@@ -133,12 +133,12 @@ class Execute extends Group
         {
             this.overflowMaterial = new MeshBasicMaterial({color:bodyCol});
             
-            const bgMat:MeshBasicMaterial = new MeshBasicMaterial({color:bgCol});
+            const bgMat:MeshBasicMaterial = new MeshBasicMaterial({color:bgCol, transparent:false, forceSinglePass:true});
             this.borderMaterial = new MeshBasicMaterial({color:bgCol});
             this.backgroundMaterial = bgMat;
 
             const bgMesh:Mesh = new Mesh(new PlaneGeometry(Execute.worldSize.x, Execute.worldSize.y), bgMat);
-            bgMesh.position.set(0,0, -10);
+            bgMesh.position.set(0,0, -15);
             super.add(bgMesh);
             this.backgroundMesh = bgMesh;
 

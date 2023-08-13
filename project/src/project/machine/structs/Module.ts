@@ -430,7 +430,15 @@ class StampConfig extends ModConfig
         {name:"Palette 4", value:ColorMode.Palette4},
     ]};
     size:FloatConfigParam = { id: "size", name: "Size", desc: "Size of the stamp", type: "number", default: 5, value: 5, exposed:true, options: {min: 5, max: 20}};
-    pressure:FloatConfigParam = { id: "pressure", name: "Pressure", desc: "How much pressure is applied", type: "number", default: 1, value: 1, exposed:true, options: {min: .05, max: 0.5}};
+    pressure:FloatConfigParam = { id: "pressure", name: "Pressure", desc: "How much pressure is applied", type: "number", default: 4, value: 4, exposed:true, options: {min: .05, max: 0.3}};
+    shape:SelectConfigParam = { id: "shape", name: "Shape", desc: "Shape of the stamp", type: "select", default: ParticleShape.Circle, value: ParticleShape.Circle, exposed:true, options: [
+        {name:"Circle", value:ParticleShape.Circle},
+        {name:"Square", value:ParticleShape.Square},
+        {name:"Triangle", value:ParticleShape.Triangle},
+        {name:"Hexagon", value:ParticleShape.Hexagon},
+        {name:"Rectangle", value:ParticleShape.Rectangle},
+        //{name:"Line", value:ParticleShape.Line},
+    ]};
 }
 
 export {Module, ModuleType, ModuleOrientation, WaveShape, ParticleShape, ColorMode};

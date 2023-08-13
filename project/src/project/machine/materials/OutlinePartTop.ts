@@ -156,6 +156,9 @@ class OutlinePartTop extends MeshBasicMaterial
                 `#include <color_fragment>
 
                 vec2 tuv = vUv.xy *2.0 - 1.0;
+                float nn =fbm( tuv * 10.0, 2 ) * 0.1; 
+                tuv.x += nn;
+                tuv.y += nn;
                 float l = 0.0;
                 if( variant == 0.0 ) 
                     l = 1.0 - step(0.0, sdCircle(tuv, 0.85));
@@ -172,11 +175,11 @@ class OutlinePartTop extends MeshBasicMaterial
 
                 if( variant != 5.0)
                 {
-                    vec2 htDistUV = rotateUV( vPositionW.xy, PI/4.0 );
+                    vec2 htDistUV = rotateUV( vPositionW.xy, .78 );
                     htDistUV *= 0.1;
                     float htDist = fbm( htDistUV, 2 ) * 2.0 - 1.0;
                     
-                    vec2 ptUv = rotateUV( vPositionW.xy +vPosition2.xy*0.1 , PI/4.0, vec2(0.0) );
+                    vec2 ptUv = rotateUV( vPositionW.xy +vPosition2.xy*0.1 , .78, vec2(0.0) );
                     ptUv *= 3.0;
                     float c = sdCircle( fract( ptUv )*2.0-1.0, .5);
                     c = 1.0 - step( htDist, c);

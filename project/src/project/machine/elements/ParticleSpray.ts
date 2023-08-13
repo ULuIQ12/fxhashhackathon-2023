@@ -132,6 +132,7 @@ class ParticleSpray extends Group implements IElement
         return this.stepCounter/this.maxSteps;
     }
     
+    firstskipped:boolean = false;
     update(dt: number, elapsed: number): void
     {
         if( this.stepCounter < this.maxSteps && !this.isOOBV() )
@@ -139,7 +140,12 @@ class ParticleSpray extends Group implements IElement
             if(this.spawnTiming != -1)
             {
                 if( this.spawnCounter%this.spawnTiming==0)
-                    this.launchParticle();
+                {
+                    if( !this.firstskipped) // skip the first, due to how the physics engine is initialized, and the start offset
+                        this.firstskipped = true;
+                    else 
+                        this.launchParticle();
+                }
                 this.spawnCounter++;
             }
             else 
@@ -162,6 +168,7 @@ class ParticleSpray extends Group implements IElement
         let modscale:number = 0;
         let numWaves:number = 0;
         let isOn:boolean = true;
+        let modAngle:number = 0;
         for( let i:number = 0;i< this.module.mods.length;i++)
         {
             const mod:Module = this.module.mods[i];
@@ -179,6 +186,10 @@ class ParticleSpray extends Group implements IElement
                 else 
                     isOn = (isOn || SwitchElem.getValue( config, this.stepCounter));
             }
+            else  if( mod.type == ModuleType.Rotator)
+            {
+                modAngle += Rotator.geModuleRotation(this.module, mod.config as RotatorConfig, this.stepCounter);
+            }
         }
 
         if( numWaves > 0)
@@ -188,17 +199,9 @@ class ParticleSpray extends Group implements IElement
         let scale:number=1- modscale;
         let forceStrength:number = config.power.options.min +  config.power.value*MUL * (config.power.options.max - config.power.options.min);
         forceStrength = Math.max( 0.2, forceStrength);
-        let modAngle:number = 0;
+        
         let modForce:number = 0 ;
-        for( let i:number = 0;i< this.module.mods.length;i++)
-        {
-            const mod:Module = this.module.mods[i];
 
-            if( mod.type == ModuleType.Rotator)
-            {
-                modAngle += Rotator.geModuleRotation(this.module, mod.config as RotatorConfig, this.stepCounter);
-            }
-        }
         this.module.vis.additionalRotation = modAngle;
         forceStrength += modForce;
 

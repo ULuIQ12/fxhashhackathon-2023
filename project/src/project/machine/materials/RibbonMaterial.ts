@@ -10,6 +10,9 @@ class RibbonMaterial extends MeshBasicMaterial
     constructor(parameters:MeshBasicMaterialParameters, perlinOptions:any = null)
     {
         parameters.alphaTest = 0.1;
+        parameters.forceSinglePass = true;
+        //parameters.depthWrite = false;
+        //parameters.depthTest = false;
         //parameters.wireframe = true;
         super(parameters);
 

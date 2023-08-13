@@ -1,6 +1,6 @@
 import { Group, InstancedMesh, Vector3, Mesh, Float32BufferAttribute, BufferAttribute, Vector2, Material, MeshBasicMaterial, BufferGeometry, PlaneGeometry, Object3D, Color, DynamicDrawUsage, MathUtils } from "three";
 import { IElement } from "./IElement";
-import { ColorMode, Module, ModuleType, RotatorConfig, StampConfig, SwitchConfig, WaveConfig } from "../structs/Module";
+import { ColorMode, Module, ModuleType, ParticleShape, RotatorConfig, StampConfig, SwitchConfig, WaveConfig } from "../structs/Module";
 import { Execute } from "../Execute";
 import { Rand } from "../../../helpers/Rand";
 import { RigidBody } from "@dimforge/rapier2d";
@@ -19,9 +19,9 @@ class Stamp extends Group implements IElement
     material:MeshBasicMaterial;
     stepCounter:number = 0;
     spawnCounter:number = 0;
-    spawnTiming:number = 20;
+    spawnTiming:number = 30;
     quadSize:number = 1;
-    maxSteps:number = 100;
+    maxSteps:number = 50;
     mesh:Mesh;
     geometry:BufferGeometry;
     dummy:Object3D = new Object3D();
@@ -49,8 +49,47 @@ class Stamp extends Group implements IElement
         const normals:number[] = [];
         const colors:number[] = [];
         const alphas:number[] = [];
+        const offsets:number[] = [];
+
+        let matVariant:number;
+        const config:StampConfig = this.module.config as StampConfig;
+        switch(config.shape.value)
+        {
+            case ParticleShape.Circle:
+                matVariant = 0;
+                break;
+            case ParticleShape.Square:
+                matVariant = 1;
+                break;
+            case ParticleShape.Triangle:
+                matVariant = 2;
+                break;
+            case ParticleShape.Hexagon:
+                matVariant = 3;
+                break;
+            case ParticleShape.Rectangle:
+                matVariant = 4;
+                break;
+            case ParticleShape.Line:
+                matVariant = 5;
+                break;
+        }
 
         const initPos:Vector3 = new Vector3(1000,1000,1000);
+
+        const colorVal:ColorMode = (this.module.config as StampConfig).color.value as ColorMode;
+        console.log( "ColorMode = ", colorVal);
+        const initCol:Color = new Color();
+        const off:Vector2 = new Vector2();
+
+        if( colorVal == ColorMode.Random || colorVal == ColorMode.Rotating)
+            initCol.setHSL(0,0,1);
+        else
+        {
+            const c:number = Object.values(ColorMode).indexOf( colorVal) - 2;
+            console.log( "Stamp color = ", c, Palette.colors[c]);
+            initCol.copy( Palette.colors[c] );
+        }
 
         for( let i:number = 0 ;i< this.maxSteps ;i ++)
         {
@@ -72,19 +111,18 @@ class Stamp extends Group implements IElement
 
             const i0:number = i*4;
             indices.push(i0,i0+2,i0+1);
-            indices.push(i0,i0+3,i0+2);            
+            indices.push(i0,i0+3,i0+2);          
             
-            normals.push(0,0,1);
-            normals.push(0,0,1);
-            normals.push(0,0,1);
-            normals.push(0,0,1);
+            //off.set( Rand.rand(), Rand.rand() );
+            off.set( Rand.fBetween(-.1,.1), Rand.fBetween(-.1,.1) );
+            for( let j:number = 0 ;j<4;j++)
+            {
+                normals.push(0,0,1);
+                colors.push(initCol.r,initCol.g,initCol.b);
+                alphas.push(1);
+                offsets.push(off.x,off.y);
 
-            colors.push(1,1,1);
-            colors.push(1,1,1);
-            colors.push(1,1,1);
-            colors.push(1,1,1);
-
-            alphas.push(1,1,1,1);
+            }
 
         }
 
@@ -93,18 +131,20 @@ class Stamp extends Group implements IElement
         this.geometry.setAttribute( 'normal', new Float32BufferAttribute( normals, 3 ) );
         this.geometry.setAttribute( 'color', new Float32BufferAttribute( colors, 3 ) );
         this.geometry.setAttribute( 'alpha', new Float32BufferAttribute( alphas, 1 ) );
+        this.geometry.setAttribute( 'offset', new Float32BufferAttribute( offsets, 2 ) );
         this.geometry.setIndex(indices);
 
         this.geometry.needsUpdate = true;
 
-        this.material = new StampMaterial( {color:0xffffff,vertexColors:true,transparent:true,opacity:1} );
+        this.material = new StampMaterial( {color:0xffffff,vertexColors:true,transparent:true,opacity:1} , matVariant);
         this.mesh = new Mesh( this.geometry, this.material );
         this.mesh.frustumCulled = false;
-
+        this.mesh.renderOrder = -1000;
         super.add(this.mesh);
     }
 
 
+    firstskipped:boolean = false;
     update(dt: number, elapsed: number): void 
     {
         if( this.stepCounter < this.maxSteps && !this.isOOBV() )
@@ -112,7 +152,12 @@ class Stamp extends Group implements IElement
             if(this.spawnTiming != -1)
             {
                 if( this.spawnCounter%this.spawnTiming==0)
-                    this.Stamp();
+                {
+                    if( !this.firstskipped) // skip the first, due to how the physics engine is initialized, and the start offset
+                        this.firstskipped = true;
+                    else 
+                        this.Stamp();
+                }
                 this.spawnCounter++;
             }
             else 
@@ -137,13 +182,13 @@ class Stamp extends Group implements IElement
             const mod:Module = this.module.mods[i];
             if( mod.type == ModuleType.WaveMod)
             {
-                modscale += WaveMod.getWave(mod.config as WaveConfig, this.stepCounter);
+                modscale += WaveMod.getWave(mod.config as WaveConfig, this.stepCounter*20);
                 numWaves++;
                 
             }
             else if( mod.type == ModuleType.Rotator)
             {
-                modAngle += Rotator.geModuleRotation(this.module, mod.config as RotatorConfig, this.stepCounter);
+                modAngle += Rotator.geModuleRotation(this.module, mod.config as RotatorConfig, this.stepCounter*20);
             }
             else if( mod.type == ModuleType.Perlin)
             {
@@ -162,19 +207,20 @@ class Stamp extends Group implements IElement
             }
         }
 
-        if( numWaves > 0)
+        if( numWaves > 1)
             modscale /= numWaves;
-        if( numPerlin > 0)
+        if( numPerlin > 1)
             pressureMod /= numPerlin;
         
         const cScale:number =config.size.options.min + (config.size.options.max-config.size.options.min) * config.size.value * 1/9 
         const scale:number = cScale * (1-modscale);
         const col:Color =this.tempCol;
+        
         if( config.color.value == ColorMode.Random)
             col.copy( Rand.option(Palette.colors));
         else if( config.color.value == ColorMode.Rotating)
         {
-            const cval:number = (this.stepCounter%10)/10;
+            const cval:number = (this.stepCounter%5)/5;
             const c0:Color = new Color();
             const c1:Color = new Color();
             let d:number = 0;
@@ -206,10 +252,15 @@ class Stamp extends Group implements IElement
             c0.lerp(c1, d);
             col.copy(c0);
         }
+        else
+        {
+            const c:number = Object.values(ColorMode).indexOf( config.color.value as ColorMode) - 2;
+            col.copy( Palette.colors[c] );
+        }
         const calpha:number = config.pressure.options.min + (config.pressure.options.max-config.pressure.options.min) * config.pressure.value * 1/9 ;
         const alpha:number = calpha - pressureMod * calpha;
 
-        const depth:number = -( 1- this.stepCounter / this.maxSteps) * 5;
+        const depth:number = -10 -( 1- this.stepCounter / this.maxSteps) * 1;
         const positions:BufferAttribute = this.geometry.getAttribute("position") as BufferAttribute;
         const colors:BufferAttribute = this.geometry.getAttribute("color") as BufferAttribute;
         const alphas:BufferAttribute = this.geometry.getAttribute("alpha") as BufferAttribute;

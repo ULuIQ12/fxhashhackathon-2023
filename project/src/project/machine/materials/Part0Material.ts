@@ -9,7 +9,7 @@ class Part0Material extends MeshBasicMaterial
     constructor(parameters:MeshBasicMaterialParameters)
     {
         parameters.alphaTest = 0.5;
-
+        parameters.forceSinglePass = true;
         super(parameters);
         this.uniforms = {
             
