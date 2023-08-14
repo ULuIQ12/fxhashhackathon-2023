@@ -21,6 +21,7 @@ import { updateProgress} from "./react/CaptureModal";
 import { DOMElement } from "react";
 import { MyFilmPass } from "./post/MyFilmPass";
 import JSONCrush from "jsoncrush";
+import { FlareSharp } from "@mui/icons-material";
 
 
 
@@ -113,14 +114,19 @@ class  Project
 
     onParamsChange(event)
     {
-        console.log("OnParamsChange ->", event);
+        //console.log("OnParamsChange ->", event);
     }
 
     defineFeatures() 
     {        
         // features extraction extraction, can't wait after loading to do that
         const crushed:string = Params.getParam(Project.CONFIG_PARAM_ID);
-        console.log( "Crushed config : ", crushed, this.snippet );
+        if( crushed.length > 512 )
+        {
+            // we have a problem, should not happen, but hard to be sure. 512 feels large enough
+            console.log( "Crushed config : ", crushed, this.snippet );
+        }
+
         let weight:number = 0 ;
         let numBlocks:number = 0;
         if( crushed == undefined || crushed == "")
@@ -224,7 +230,7 @@ class  Project
 
         if( Project.GetContext() == FXContext.CAPTURE)
         {
-            // force canvas at the right size from the start
+            // force canvas at the right size from the start, just in case
             const ar:RunAR = Object.values(RunAR)[Number( Params.getParam(Project.AR_PARAM_ID) )];
             const res:Vector2 = new Vector2();
             switch(ar)
@@ -349,8 +355,12 @@ class  Project
 
     composer:EffectComposer;
     renderPass:SSAARenderPass;
+    filmPass:MyFilmPass;
+    fpStren:number = 0.3;
+    isMobile:boolean = false;
     initComposer()
     {
+        this.isMobile = this.mobileCheck();
         const rendererSize:Vector2 = new Vector2();
         this.renderer.getSize(rendererSize);
 
@@ -358,16 +368,15 @@ class  Project
         
         const renderPass:SSAARenderPass = new SSAARenderPass(this.scene, this.camera);
         this.renderPass = renderPass;
-        const filmPass = new MyFilmPass(0.2, 0, 0, 0.0);
+        this.filmPass = new MyFilmPass(this.fpStren, 0, 0, 0.0);
         
-        if( this.mobileCheck() )
+        if( this.isMobile )
         {
-            //console.log("mobile device!");
             renderPass.sampleLevel = 1;
         }
         
         this.composer.addPass(renderPass);
-        this.composer.addPass(filmPass);
+        this.composer.addPass(this.filmPass);
 
     }
 
@@ -449,6 +458,8 @@ class  Project
             this.camera.position.x = 0;
             this.camera.position.y = 0;
             this.controls.target.set(0,0,0);
+
+            this.adjustFilmgrain( minDim / 1080);
            
         }
         else if( this.capturingBP)
@@ -460,6 +471,8 @@ class  Project
             this.camera.position.x = 0;
             this.camera.position.y = .7;
             this.controls.target.set(0,.7,0);   
+
+            
         }
         else if( Project.GetContext() == FXContext.CAPTURE)
         {
@@ -524,8 +537,10 @@ class  Project
                     }
                 }
             }
-        }        
-        
+        }
+
+        this.adjustFilmgrain( minDim / 2048);
+
         const relSize:number = minDim / this.orthoCamSize;
 
         cam.left = -dx / relSize /2;
@@ -602,11 +617,12 @@ class  Project
         else 
         {
             this.controls.update();
-            //this.adjustAA(dt);
+            
             //console.log( "Zoom=" , this.camera.zoom);
 
             if( !this.capturing && !this.capturingBP)
             {
+                this.adjustAA(dt);
                 this.handleContentAnimation(dt,elapsed);
                 this.render(dt, elapsed);
             }
@@ -617,18 +633,46 @@ class  Project
         
     }
 
+    frameTimeHistory:number[] = [];
+    lastAAChange:number = 0;
     adjustAA(dt:number ) // humm ...
     {
-        if(Project.GetContext() == FXContext.CAPTURE)
+        if(Project.GetContext() == FXContext.CAPTURE || this.isMobile)
             return ;
 
+        this.frameTimeHistory.push(dt);
+        if( this.frameTimeHistory.length > 60)
+            this.frameTimeHistory.shift();
+        
+        let sum:number = 0;
+        for( let i:number = 0; i < this.frameTimeHistory.length; i++)
+            sum += this.frameTimeHistory[i];
+
+        const avg:number = sum / this.frameTimeHistory.length;
         const current:number = this.renderPass.sampleLevel;
-        if( dt < 0.025 && current <2)
-            this.renderPass.sampleLevel = 2;
-        else if( dt > 0.04 && current > 1 )
-            this.renderPass.sampleLevel = 1;
+        const ct:number = performance.now();
 
+        if( Designer.instance.currentMode == "build")
+        {
+            this.renderPass.sampleLevel = 4;
+            return ;
+        }
 
+        if( ct - this.lastAAChange > 1000)
+        {
+            if( avg < 0.017 && current < 4)
+            {
+                this.renderPass.sampleLevel++;
+                this.lastAAChange = ct;
+            }
+            else if( avg > 0.017 && current > 1)
+            {
+                this.renderPass.sampleLevel--;
+                this.lastAAChange = ct;
+            }
+        }
+
+        //console.log( "AA", avg, this.renderPass.sampleLevel);
     }
 
     // to test the toDataURL. Problem seems to come from the rendering instance. Dynamic canvas size doen't work on NON GPU instances. Fixed canvas size works fine
@@ -795,6 +839,7 @@ class  Project
         onCaptureStart();
         this.capturing = true;
         Designer.instance.SetCaptureMode(true);
+        this.renderPass.sampleLevel = 4;
         this.HandleResize();
         this.saveAsImage();
     }
@@ -807,6 +852,7 @@ class  Project
         onCaptureStart();
         this.capturingBP = true;
         Designer.instance.SetCaptureBPMode(true);
+        this.renderPass.sampleLevel = 4;
         this.HandleResize();
         this.saveBPAsImage();
     }
@@ -974,6 +1020,14 @@ class  Project
           height: chunkHeight,
           data: data,
         };
+    }
+
+    
+    adjustFilmgrain(scale:number)
+    {
+        const calc:number = this.fpStren * scale;
+        this.filmPass.uniforms.nIntensity.value  = calc;
+        this.filmPass.material.needsUpdate = true;
     }
 
     mobileCheck() 

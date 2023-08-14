@@ -8,7 +8,6 @@ class RandTexGen{
     static Texture:any = -1;
     static GetTex()
     {
-        console.log("----------------------------------------Request Random texture");
         if( RandTexGen.Texture == -1)
         {
             this.GenerateTex();
@@ -18,7 +17,6 @@ class RandTexGen{
 
     static GenerateTex()
     {
-        console.log("----------------------------------------Generate Random texture");
         const size = this.SIZE * this.SIZE;
         const data = new Uint8Array(size);
         for(let i=0;i<size;i++)
@@ -40,7 +38,6 @@ class RandTexGen{
 
     static GetUniqueTex():Texture
     {
-        console.log("----------------------------------------Generate unique Random texture");
         const size = this.SIZE * this.SIZE;
         const data = new Uint8Array(size);
         for(let i=0;i<size;i++)
@@ -63,7 +60,6 @@ class RandTexGen{
 
     static getAltTex():Texture
     {
-        console.log("----------------------------------------Generate ALT Random texture");
         const size = this.SIZE * this.SIZE;
         const data = new Uint8Array(size);
         for(let i=0;i<size;i++)

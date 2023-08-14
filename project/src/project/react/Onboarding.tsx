@@ -1,4 +1,4 @@
-import { ArrowBack, ArrowForward, ArrowForwardOutlined, ArrowRight, AspectRatio, Brush, Build, CheckBoxOutlineBlank, CropSquare, Delete, DesignServices, Done, Mouse, OpenWith, Palette, PanTool, PrecisionManufacturing, RocketLaunch, Settings, Sync, ZoomIn } from '@mui/icons-material';
+import { Architecture, ArrowBack, ArrowForward, ArrowForwardOutlined, ArrowRight, AspectRatio, Brush, Build, CheckBoxOutlineBlank, CropSquare, Delete, DesignServices, Done, Mouse, OpenWith, Palette, PanTool, PrecisionManufacturing, RocketLaunch, Settings, SettingsSuggest, Sync, ZoomIn } from '@mui/icons-material';
 import { Box, Button, Dialog, DialogContent, DialogTitle, Stack, Step, StepButton, StepLabel, Stepper, Typography } from '@mui/material';
 import * as React from 'react';
 
@@ -112,8 +112,7 @@ export default function Onboarding(props) {
                     Welcome to The Incredible Contraption!<br/><br/>
                     <Box
                     sx={{ textAlign:'justify', textJustify:'inter-word'}}>
-                        Design an autonomous contraption that will create your unique artwork. 
-                        Use construction blocks{blockIcon()} to create a contraption that will move around the canvas and paint your artwork.
+                        Design an autonomous contraption that will create your unique artwork using construction blocks{blockIcon()} with various effects.
                         Play around with the different blocks{blockIcon()}, their properties and their placement to express yourself in <b>your own unique way</b>.
                     </Box>
                     <br/>
@@ -128,7 +127,7 @@ export default function Onboarding(props) {
                     At any point, you can click and drag <PanTool fontSize='small' sx={{mb:-.8}}/> to move around the canvas with the left mouse button <Mouse fontSize='small' sx={{mb:-.8}}/>.
                     You can zoom in and out <ZoomIn fontSize='small' sx={{mb:-.8}}/> with the mouse wheel.
                     <br/>
-                    You can collapse the fx(params) menu on the left, it won't be used until you're ready to mint your contraption / artwork.
+                    You can now collapse the fx(params) menu on the left, it won't be used until you're ready to mint your contraption / artwork.
                     </Box>
                 </Box>
             );
@@ -148,13 +147,13 @@ export default function Onboarding(props) {
                     <br/>
                     <Stack direction="row" spacing={2} sx={{verticalAlign:'middle', justifyContent:'center', alignItems:'center' }}>
                     <Box sx={{display:'inline-block',}}>
-                        <Stack sx={{ml:4}}>
+                        <Stack >
                         <Box sx={portraitImgBoxStyle('./assets/onboarding/step1_goodplacement.jpg')} />
                         <Typography variant='caption' sx={{color:'white'}}>Valid placement</Typography>
                         </Stack>
                     </Box>
                     <Box sx={{display:'inline-block',}}>
-                        <Stack sx={{mr:4}}>
+                        <Stack >
                         <Box sx={portraitImgBoxStyle('./assets/onboarding/step1_badplacement.jpg')} />
                         <Typography variant='caption' sx={{color:'white'}}>Invalid placements</Typography>
                         </Stack>
@@ -171,7 +170,7 @@ export default function Onboarding(props) {
                     <Box
                         sx={{ textAlign:'justify', textJustify:'inter-word'}}>
                         Blocks{blockIcon()} come in three main categories: Structural, Drawing and Mods. 
-                        Structural blocks <Build fontSize='small' sx={{mb:-.8}}/> influence the movement of the contraption, Drawing blocks <Brush fontSize='small' sx={{mb:-.8}}/> draw / spray colors around and Mods blocks <OpenWith fontSize='small' sx={{mb:-.8}}/> modify the behaviour of neighbouring blocks.
+                        Structural blocks <Architecture fontSize='small' sx={{mb:-.8}}/> influence the movement of the contraption, Drawing blocks <Brush fontSize='small' sx={{mb:-.8}}/> draw / spray colors around and Mods blocks <SettingsSuggest fontSize='small' sx={{mb:-.8}}/> modify the behaviour of neighbouring blocks.
                         <br/>
                         Two blocks{blockIcon()} orthogonally adjacent to each other will be connected and move as one.
                     </Box>

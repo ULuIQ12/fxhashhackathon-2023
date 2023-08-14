@@ -78,7 +78,6 @@ class Stamp extends Group implements IElement
         const initPos:Vector3 = new Vector3(1000,1000,1000);
 
         const colorVal:ColorMode = (this.module.config as StampConfig).color.value as ColorMode;
-        console.log( "ColorMode = ", colorVal);
         const initCol:Color = new Color();
         const off:Vector2 = new Vector2();
 
@@ -87,7 +86,6 @@ class Stamp extends Group implements IElement
         else
         {
             const c:number = Object.values(ColorMode).indexOf( colorVal) - 2;
-            console.log( "Stamp color = ", c, Palette.colors[c]);
             initCol.copy( Palette.colors[c] );
         }
 
@@ -201,10 +199,18 @@ class Stamp extends Group implements IElement
             {
                 const config:SwitchConfig = mod.config as SwitchConfig;
                 if( !config.combineRule.value ) 
-                    isOn = (isOn && SwitchElem.getValue( config, this.stepCounter *10));
+                    isOn = (isOn && SwitchElem.getValue( config, this.stepCounter));
                 else 
-                    isOn = (isOn || SwitchElem.getValue( config, this.stepCounter * 10));
+                    isOn = (isOn || SwitchElem.getValue( config, this.stepCounter));
             }
+        }
+
+        this.module.vis.additionalRotation = modAngle;
+
+        if( !isOn)
+        {
+            this.stepCounter++;
+            return;
         }
 
         if( numWaves > 1)
@@ -221,36 +227,7 @@ class Stamp extends Group implements IElement
         else if( config.color.value == ColorMode.Rotating)
         {
             const cval:number = (this.stepCounter%5)/5;
-            const c0:Color = new Color();
-            const c1:Color = new Color();
-            let d:number = 0;
-            if( cval < .25)
-            {
-                c0.copy(Palette.colors[0]);
-                c1.copy(Palette.colors[1]);
-                d = cval/.25;
-            }
-            else if( cval < .5)
-            {
-                c0.copy(Palette.colors[1]);
-                c1.copy(Palette.colors[2]);
-                d = (cval-.25)/.25;
-            }
-            else if( cval < .75)
-            {
-                c0.copy(Palette.colors[2]);
-                c1.copy(Palette.colors[3]);
-                d = (cval-.5)/.25;
-            }
-            else 
-            {
-                c0.copy(Palette.colors[3]);
-                c1.copy(Palette.colors[0]);
-                d = (cval-.75)/.25;
-            }
-            
-            c0.lerp(c1, d);
-            col.copy(c0);
+            Palette.GetInterpolatedColor(cval, col);
         }
         else
         {
@@ -271,7 +248,7 @@ class Stamp extends Group implements IElement
         const py:number = this.module.vis.position.y;
         
         const pos:Vector3 = new Vector3(px,py,depth);
-        const angle:number = Module.orientationToAngle(this.module.orientation) + rb.rotation();
+        const angle:number = Module.orientationToAngle(this.module.orientation) + rb.rotation() + modAngle;
         const axis:Vector3 = this.zAxis;
         
         const p0:Vector3 = this.tl.clone().applyAxisAngle(axis,angle).multiplyScalar(this.quadSize * scale).add(pos);

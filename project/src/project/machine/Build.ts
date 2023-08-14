@@ -118,14 +118,12 @@ class Build extends Group
         {
             
             mod.highlight();
-            const position = {left:event.clientX, top:event.clientY};
-            console.log("open menu", position);
+            const position = {left:event.clientX, top:event.clientY};   
             openModuleMenu(position, mod.moduleRef);
         }
         
         if( isOrientationMenuOpen())
         {
-            console.log( "Build closeOrientationMenu :", event);
             if(event.pointerType != "touch")
                 closeOrientationMenu();
         }
@@ -141,6 +139,67 @@ class Build extends Group
     static Clear(updateParams:boolean = true)
     {
         Build.instance.clearAllBlocks(updateParams);
+    }
+
+    static DuplicateModule(mod:Module)
+    {
+        Build.instance.duplicateModule(mod);
+    }
+
+    duplicateModule(baseMod:Module)
+    {
+        if( this.isDragging)
+            return;
+        
+        // create a new module, set it to the mouse position, add it to the scene, and set it as the dragBlock and set the isDragging flag to true
+        
+        const dragPt:Vector2 = Project.instance.pointer;
+        /*
+        if( event.type == "touchstart")
+        {
+            dragPt.set( ( event.touches[0].clientX / window.innerWidth ) * 2 - 1,
+            - ( event.touches[0].clientY / window.innerHeight ) * 2 + 1 );
+        }
+        */
+        this.ghostBlock.visible = true;
+        const pos:Vector3 = this.raycastPlane(dragPt);
+        if( pos == null)
+        {
+            //console.log("no position found");
+            return;
+        }
+        
+        const nid:number = Object.values(ModuleType).indexOf(baseMod.type) ;
+
+        const mod:ModuleVis = new ModuleVis(nid, baseMod.type);
+        mod.position.x = pos.x;
+        mod.position.y = pos.y;
+        mod.moduleRef = baseMod;
+        mod.lastConfig = baseMod.getConfigClone();
+        this.moduleContainer.add(mod);
+        this.dragBlock = mod;
+        this.isDragging = true;
+        this.ghostBlock.visible = true;
+        this.ghostBlock.position.copy(pos);
+
+
+
+        if( Project.GetContext() == FXContext.CAPTURE)
+            return;
+
+        window.addEventListener("pointerup", this.stopDrag);
+
+        /*   
+        if( !onclick)
+        {
+            window.addEventListener("pointerup", this.stopDrag);
+            window.addEventListener("touchend", this.stopDrag);
+        }
+        else 
+        {
+            window.addEventListener("pointerdown", this.stopDrag);
+        }
+        */
     }
 
     clearAllBlocks( updateParam:boolean = true)
@@ -214,7 +273,6 @@ class Build extends Group
         mod.vis.getWorldPosition(pos);
         
         pos.project(Project.instance.camera);
-        console.log("menuOrientModule", pos);
 
         const hw:number = window.innerWidth * .5;
         const hh:number = window.innerHeight * .5;
@@ -261,7 +319,7 @@ class Build extends Group
             return;
         
         // create a new module, set it to the mouse position, add it to the scene, and set it as the dragBlock and set the isDragging flag to true
-        console.log( "Addblock event =" , event );
+        
         const dragPt:Vector2 = Project.instance.pointer;
         if( event.type == "touchstart")
         {
@@ -273,7 +331,7 @@ class Build extends Group
         const pos:Vector3 = this.raycastPlane(dragPt);
         if( pos == null)
         {
-            console.log("no position found");
+            //console.log("no position found");
             return;
         }
         const mod:ModuleVis = new ModuleVis(data.id, data.name);
@@ -302,13 +360,13 @@ class Build extends Group
 
     static MenuRotateModule(m:Module, direction:number )
     {
-        console.log("MenuRotateModule", m, direction);
+        //console.log("MenuRotateModule", m, direction);
         Build.instance.rotateModule(m, direction);
     }
 
     static SetModuleOrientation(m:Module, orientation:ModuleOrientation)
     {
-        console.log("SetModuleOrientation", m, orientation);
+        //console.log("SetModuleOrientation", m, orientation);
         Build.instance.setModuleOrientation(m, orientation);
     }
 
@@ -337,13 +395,13 @@ class Build extends Group
 
     static MenuEditModule(m:Module)
     {
-        console.log("MenuEditModule", m);
+        //console.log("MenuEditModule", m);
         Build.instance.editModule(m);
     }
 
     editModule(m:Module)
     {
-        console.log("editModule", m);
+        //console.log("editModule", m);
         const position = {left:0, top:0};
         openModuleEditMenu(m);
     }
@@ -376,7 +434,9 @@ class Build extends Group
             const m:Module = this.modules[this.gridToModuleIndex(gridPos)];
             m.type = this.dragBlock.type;
             if( this.dragBlock.lastConfig != null)
+            {
                 m.config = this.dragBlock.lastConfig;
+            }
             //console.log( "Prev config = ", this.dragBlock.lastConfig);
             //m.config = this.dragBlock.lastConfig;
             m.vis = this.dragBlock;

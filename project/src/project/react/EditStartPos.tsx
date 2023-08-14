@@ -119,7 +119,6 @@ export default function EditStartPos( props ) {
         const size:Vector2 = currentSize.current;
         const x:number = ( pos.x + .5 ) * size.x;
         const y:number = ( (pos.y*-1) + .5 ) * size.y;
-        console.log( pos, size, x, y );
         return new Vector2( x, y );
     }
 

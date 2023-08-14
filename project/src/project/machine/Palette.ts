@@ -68,6 +68,39 @@ class Palette
         //console.log( "Update palette param : ", msg);
 
     }
+
+    static GetInterpolatedColor( t:number, target:Color = new Color() ):Color
+    {
+        const c0:Color = new Color();
+        const c1:Color = new Color();
+        let d:number = 0;
+        if( t < .25)
+        {
+            c0.copy(Palette.colors[0]);
+            c1.copy(Palette.colors[1]);
+            d = t/.25;
+        }
+        else if( t < .5)
+        {
+            c0.copy(Palette.colors[1]);
+            c1.copy(Palette.colors[2]);
+            d = (t-.25)/.25;
+        }
+        else if( t < .75)
+        {
+            c0.copy(Palette.colors[2]);
+            c1.copy(Palette.colors[3]);
+            d = (t-.5)/.25;
+        }
+        else 
+        {
+            c0.copy(Palette.colors[3]);
+            c1.copy(Palette.colors[0]);
+            d = (t-.75)/.25;
+        }
+        
+        return target.copy( c0).lerp(c1, d );
+    }
 }
 
 export { Palette };

@@ -155,7 +155,9 @@ class StampMaterial extends MeshBasicMaterial
                 diffuseColor.a = vAlpha;
 
                 float l = 0.0;
+                float n = fbm( vUv.xy * 20.0 , 2) * .025;
                 vec2 tuv = vUv.xy *2.0 - 1.0;
+                tuv += vec2(n);
 
                 if( variant == 0.0 ) 
                     l = 1.0 - step(0.0, sdCircle(tuv, 0.85));
@@ -166,11 +168,11 @@ class StampMaterial extends MeshBasicMaterial
                 else if( variant == 3.0 )
                     l = 1.0 - step(0.0, sdHexagon(tuv, 0.8));
                 else if( variant == 4.0 )
-                    l = 1.0 - step(0.0, sdBox(tuv, vec2(0.85, 0.85*.5)));
+                    l = 1.0 - step(0.0, sdBox(tuv, vec2(0.85 * .5, 0.85)));
                 else if( variant == 5.0 )
                     l = 1.0;
 
-                //vec2 circUVs = vUv * 50.0;
+                
                 vec2 circUVs = rotateUV( vPositionW.xy*2.0 + vOffset , .78, 0.0);
                 float csize = fbm( vPositionW.xy * .1, 2);
                 float circle = sdCircle(fract( circUVs) * 2.0 - 1.0, csize);

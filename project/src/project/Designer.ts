@@ -323,7 +323,12 @@ class Designer extends Group
         const ser:string = JSON.stringify(modules);
         //console.log( "Serialized Modules: size=" , ser.length , ser) ;
         const crushed:string = encodeURIComponent( JSONCrush.crush(ser) );
-        console.log( "Crushed Serialized Modules: size=" , crushed.length ) ;        
+        if( crushed.length > 512 )
+        {
+            // we have a problem, should not happen, but hard to be sure. 512 feels large enough
+            console.log( "Crushed Serialized Modules: size=" , crushed.length ) ;
+        }
+        
         this.SaveToParams(crushed);
     }
 

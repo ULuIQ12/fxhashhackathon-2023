@@ -178,7 +178,6 @@ export default function EditModule( props ) {
             else 
             {
                 const index:number = parseInt( (key.substring(key.length-1, key.length) as string) ) ;
-                console.log( "indexCCol" , index);
                 const pval:number = Palette.paletteValues[Palette.selectedPalette][index];
                 colors.push("#" + new Color(pval).getHexString());
                 
@@ -356,7 +355,7 @@ export default function EditModule( props ) {
              <DialogActions>
                 <Button variant='outlined' color="secondary" endIcon={<Shuffle sx={{mb:0.15}} />} onClick={handleRandomize}>Randomize</Button>
                 <Button variant='outlined' color="secondary" endIcon={<CancelOutlined sx={{mb:0.15}} />} onClick={props.onClose}>Cancel</Button>
-                <Button variant='outlined' onClick={handleSave} endIcon={<SaveAlt sx={{mb:0.15}} />}>Commit</Button>
+                <Button variant='outlined' onClick={handleSave} endIcon={<SaveAlt sx={{mb:0.15}} />}>Save</Button>
              </DialogActions>
         </Dialog>
         

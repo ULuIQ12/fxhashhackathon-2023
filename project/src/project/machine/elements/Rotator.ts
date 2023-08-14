@@ -11,7 +11,7 @@ class Rotator extends Group implements IElement
     static geModuleRotation( m:Module, rotConfig:RotatorConfig, step:number = 0):number
     {
         const angle:number = (rotConfig.angle.value)?Math.PI:Math.PI*.5;
-        const interval:number = rotConfig.interval.options.min +  rotConfig.interval.value*.1 * (rotConfig.interval.options.max - rotConfig.interval.options.min);
+        const interval:number = rotConfig.interval.options.min +  rotConfig.interval.value*1/9 * (rotConfig.interval.options.max - rotConfig.interval.options.min);
         const addRot:number = Math.floor( step/interval ) * ((rotConfig.clockwise.value)?1:-1) * angle;
         return addRot;
     }

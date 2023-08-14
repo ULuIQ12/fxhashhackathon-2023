@@ -100,6 +100,20 @@ class Module
         this.config = this.createConfig();
     }
 
+    getConfigClone():ModConfig
+    {
+        const configClone:ModConfig = this.createConfig();
+        // copy values from this.config to configClone
+        for (const key in this.config)
+        {
+            const p:ConfigParam = this.config[key];
+            // copy each value from p to configClone
+            configClone[key] = {...p};
+
+        }
+        return configClone;
+    }
+
     createConfig():ModConfig
     {
         switch(this._type)
@@ -336,12 +350,12 @@ class RibbonConfig extends ModConfig
         {name:"Palette 4", value:ColorMode.Palette4},
     ]};
     mass:FloatConfigParam = { id: "mass", name: "Mass", desc: "The mass of the block", type: "number", default: 1, value: 1, exposed:false, options: {min: 0, max: 5}};
-    power:FloatConfigParam = { id: "power", name: "Power", desc: "How far the ribbon is launched", type: "number", default: 0, value: 0, exposed:true, options: {min: 0, max: 100}};
-    powerNoise:FloatConfigParam = { id: "powerNoise", name: "Power noise", desc: "Noise in how far the ribbon is launched", type: "number", default: 0, value: 0, exposed:true,  options: {min: 0, max: 1}};
-    directionNoise:FloatConfigParam = { id: "directionNoise", name: "Direction Noise", desc: "Noise is the launch direction", type: "number", default: 0, value: 0, exposed:true, options: {min: 0, max: 1}};
-    width:FloatConfigParam = { id: "width", name: "Width", desc: "Width of the ribbon", type: "number", default: 2, value: 2, exposed:true, options: {min: 0.1, max: 5}};
-    widthNoise:FloatConfigParam = { id: "widthNoise", name: "Width Noise", desc: "Noise applied the width of the ribbon", type: "number", default: 0, value: 0, exposed:true, options: {min: 0, max: 1}};
-    enableCollision:BoolConfigParam = { id: "enableCollision", name: "Collide with borders", desc: "Enables collision with borders. Otherwise it wraps", type: "boolean", default: false, value: false, exposed:true, options: {}};
+    power:FloatConfigParam = { id: "power", name: "Power", desc: "How far the paint is launched", type: "number", default: 0, value: 0, exposed:true, options: {min: 0, max: 100}};
+    powerNoise:FloatConfigParam = { id: "powerNoise", name: "Power noise", desc: "Noise in how far the paint is launched", type: "number", default: 0, value: 0, exposed:true,  options: {min: 0, max: 1}};
+    directionNoise:FloatConfigParam = { id: "directionNoise", name: "Direction Noise", desc: "How jittery is the launch", type: "number", default: 0, value: 0, exposed:true, options: {min: 0, max: 1}};
+    width:FloatConfigParam = { id: "width", name: "Width", desc: "Width of the brush", type: "number", default: 2, value: 2, exposed:true, options: {min: 0.1, max: 5}};
+    widthNoise:FloatConfigParam = { id: "widthNoise", name: "Width Noise", desc: "Noise applied the width of the brush", type: "number", default: 0, value: 0, exposed:true, options: {min: 0, max: 1}};
+    enableCollision:BoolConfigParam = { id: "enableCollision", name: "Collide with frame", desc: "Enables collision with the frame. Otherwise it wraps", type: "boolean", default: false, value: false, exposed:true, options: {}};
 }
 
 class ParticlesConfig extends ModConfig
@@ -367,7 +381,7 @@ class ParticlesConfig extends ModConfig
         {name:"Rectangle", value:ParticleShape.Rectangle},
         {name:"Line", value:ParticleShape.Line},
     ]};
-    enableCollision:BoolConfigParam = { id: "enableCollision", name: "Collides with borders", desc: "Otherwise wraps", type: "boolean", default: false, value: false, exposed:true, options: {}};
+    enableCollision:BoolConfigParam = { id: "enableCollision", name: "Collides with frame", desc: "Otherwise wraps", type: "boolean", default: false, value: false, exposed:true, options: {}};
     selfCollide:BoolConfigParam = { id: "selfCollide", name: "Collides with other particles", desc: "", type: "boolean", default: false, value: false, exposed:true, options: {}};
 }
 
@@ -403,7 +417,7 @@ class PerlinConfig extends ModConfig
 class SwitchConfig extends ModConfig
 {
     mass:FloatConfigParam = { id: "mass", name: "Mass", desc: "The mass of the block", type: "number", default: 1, value: 1, exposed:false, options: {min: 0, max: 5}};
-    interval:FloatConfigParam = { id: "frequency", name: "Interval",desc: "Time between rotations", type: "number", default: 3, value: 3, exposed:true, options: {min: 10, max: 200}};
+    interval:FloatConfigParam = { id: "frequency", name: "Interval",desc: "Time between switches", type: "number", default: 3, value: 3, exposed:true, options: {min: 2, max: 25}};
     start:BoolConfigParam = { id: "start", name: "Starts off/on",desc: "Initial state",  type: "boolean", default: false, value: false, exposed:true, options: {}};
     combineRule:BoolConfigParam = { id: "combineRule", name: "Combine AND / OR",desc: "How this combines with other switches",  type: "boolean", default: false, value: false, exposed:true, options: {}};
 }

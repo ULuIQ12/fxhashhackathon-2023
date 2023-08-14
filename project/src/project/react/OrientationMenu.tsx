@@ -30,7 +30,7 @@ export default function OrientationMenu() {
 
     openOrientationMenu = (position, data) => {
         setData(data);
-        console.log( "openOrientationMenu at ", position);
+        //console.log( "openOrientationMenu at ", position);
         setAnchorPosition(position);
         openMenu();
     }
@@ -41,7 +41,7 @@ export default function OrientationMenu() {
 
     closeOrientationMenu = () => {
 
-        console.log( "closeOrientationMenu")
+        //console.log( "closeOrientationMenu")
 
         //setData(null);
         setOpen(false);

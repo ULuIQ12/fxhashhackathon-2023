@@ -144,6 +144,7 @@ class Execute extends Group
 
             
             this.borderMask = new Group();
+            this.borderMask.position.set( 0, 0, 5);
             super.add(this.borderMask);
 
             const borderGeom:BufferGeometry = new PlaneGeometry(Execute.worldSize.x , bw);

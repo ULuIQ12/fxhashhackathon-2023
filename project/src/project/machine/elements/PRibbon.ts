@@ -84,9 +84,7 @@ class PRibbon extends Group implements IElement
             this.color.copy( Rand.option( Palette.colors ) );
         else if( config.color.value != ColorMode.Rotating)
         {
-            
             const c:number = Object.values(ColorMode).indexOf( config.color.value as ColorMode) - 2;
-            console.log( "pouet = " , config.color.value, c )
             this.color.copy(Palette.colors[c]);
         }
         else 
@@ -368,9 +366,7 @@ class PRibbon extends Group implements IElement
                     }
                 }
                 n.copy(tan).cross(this.front).normalize();
-
-
-                //let totalHW:number = Math.max( 0, w );
+                
                 let totalHW:number = Math.max( 0,baseWidth );
                 
                 bwidths.setX(idx, w);
@@ -383,46 +379,13 @@ class PRibbon extends Group implements IElement
                 positions.setXYZ(idx, pright.x, pright.y, pleft.z);
                 positions.setXYZ(idx+1, pleft.x, pleft.y, pleft.z);
 
-
                 if( config.color.value == ColorMode.Rotating)
                 {
                     const cval:number = (vindex%500)/500;
-                    const c0:Color = new Color();
-                    const c1:Color = new Color();
-                    let d:number = 0;
-                    if( cval < .25)
-                    {
-                        c0.copy(Palette.colors[0]);
-                        c1.copy(Palette.colors[1]);
-                        d = cval/.25;
-                    }
-                    else if( cval < .5)
-                    {
-                        c0.copy(Palette.colors[1]);
-                        c1.copy(Palette.colors[2]);
-                        d = (cval-.25)/.25;
-                    }
-                    else if( cval < .75)
-                    {
-                        c0.copy(Palette.colors[2]);
-                        c1.copy(Palette.colors[3]);
-                        d = (cval-.5)/.25;
-                    }
-                    else 
-                    {
-                        c0.copy(Palette.colors[3]);
-                        c1.copy(Palette.colors[0]);
-                        d = (cval-.75)/.25;
-                    }
-                    
-                    c0.lerp(c1, d);
-                    colors.setXYZ(idx, c0.r, c0.g, c0.b);
-                    colors.setXYZ(idx+1, c0.r, c0.g, c0.b);
+                    const col:Color = Palette.GetInterpolatedColor( cval );
+                    colors.setXYZ(idx, col.r, col.g, col.b);
+                    colors.setXYZ(idx+1, col.r, col.g, col.b);
                 }
-
-                
-
-                
 
                 vindex+=2;
             }
@@ -573,8 +536,8 @@ class PRibbon extends Group implements IElement
         {
             const colliderDesc:ColliderDesc = RAPIER.ColliderDesc.ball(totalWidth * .25)
                 .setRestitution(0.5)
-                .setCollisionGroups(this.collisionWalls);
-                //.setCollisionGroups(this.collisionSelfAndWalls);
+                .setCollisionGroups(this.collisionWalls)
+                .setRestitutionCombineRule(CoefficientCombineRule.Min);
                 
             const collider:Collider = this.world.createCollider(colliderDesc, rbp);
             part.collider = collider;

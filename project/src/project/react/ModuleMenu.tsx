@@ -4,7 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { Build } from '../machine/Build';
 import { ModuleVis } from '../machine/ModuleVis';
 import { Box, Fade, ListItemIcon, ListItemText, MenuList, Modal, Paper } from '@mui/material';
-import { Delete, DragHandle, Edit, PanTool, Rotate90DegreesCcw, Rotate90DegreesCw, Settings, Sync, Translate } from '@mui/icons-material';
+import { ContentCopy, Delete, DragHandle, Edit, PanTool, Rotate90DegreesCcw, Rotate90DegreesCw, Settings, Sync, Translate } from '@mui/icons-material';
 import { Module } from '../machine/structs/Module';
 import EditWave from './EditModule';
 
@@ -90,6 +90,11 @@ export default function ModuleMenu() {
         closeMenu();
     }
 
+    const clickDuplicate = () => {
+        Build.DuplicateModule(data as Module);
+        closeMenu();
+    }
+
     return (
     <Paper>
         
@@ -125,6 +130,7 @@ export default function ModuleMenu() {
                 <MenuItem divider={true} onClick={clickEdit}><ListItemIcon sx={{pr:2}}><Settings  color='primary' /></ListItemIcon><ListItemText>Configure</ListItemText></MenuItem>
                 <MenuItem divider={true} onClick={clickMove}><ListItemIcon sx={{pr:2}}><PanTool  color='primary' /></ListItemIcon><ListItemText>Move</ListItemText></MenuItem>
                 {canRotate && <MenuItem divider={true} onClick={clickOpenOrientationMenu}><ListItemIcon sx={{pr:2}}><Sync  color='primary' /></ListItemIcon><ListItemText>Set orientation</ListItemText></MenuItem>}
+                <MenuItem divider={true} onClick={clickDuplicate}><ListItemIcon sx={{pr:2}}><ContentCopy  color='primary' /></ListItemIcon><ListItemText>Duplicate</ListItemText></MenuItem>
                 <MenuItem onClick={clickDestroy}><ListItemIcon sx={{pr:2}}><Delete color='primary' /></ListItemIcon><ListItemText>Delete</ListItemText></MenuItem>
             </MenuList> 
         </Menu>

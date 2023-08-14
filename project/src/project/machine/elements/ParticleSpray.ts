@@ -305,37 +305,8 @@ class ParticleSpray extends Group implements IElement
         {
             const index:number = Math.floor( (this.stepCounter * .1)%Palette.colors.length );
             const cval:number = (this.stepCounter%100)/100;
-            //pi.color.copy( Palette.colors[index]);
-            const c0:Color = new Color();
-            const c1:Color = new Color();
-            let d:number = 0;
-            if( cval < .25)
-            {
-                c0.copy(Palette.colors[0]);
-                c1.copy(Palette.colors[1]);
-                d = cval/.25;
-            }
-            else if( cval < .5)
-            {
-                c0.copy(Palette.colors[1]);
-                c1.copy(Palette.colors[2]);
-                d = (cval-.25)/.25;
-            }
-            else if( cval < .75)
-            {
-                c0.copy(Palette.colors[2]);
-                c1.copy(Palette.colors[3]);
-                d = (cval-.5)/.25;
-            }
-            else 
-            {
-                c0.copy(Palette.colors[3]);
-                c1.copy(Palette.colors[0]);
-                d = (cval-.75)/.25;
-            }
-            
-            c0.lerp(c1, d);
-            pi.color.copy(c0);
+            const col:Color = Palette.GetInterpolatedColor(cval);
+            pi.color.copy(col);
         }
 
         this.particles.push(pi);
