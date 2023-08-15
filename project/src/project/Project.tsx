@@ -107,14 +107,18 @@ class  Project
         Params.addFloat(Project.SX_PARAM_ID, "sx", UpdateType.CODE_DRIVEN, -.5,.5, 0.01, 0); 
         Params.addFloat(Project.SY_PARAM_ID, "sy", UpdateType.CODE_DRIVEN, -.5,.5, 0.01, 0);
 
+
+        //Params.addString("test", "Test", UpdateType.SYNC, "", 0, 32);
+
         this.snippet.on(Params.UPDATE_SIGNAL,()=>{},this.onParamsChange);  
+        
         
         this.snippet.params(Params.params);
     }
 
     onParamsChange(event)
     {
-        //console.log("OnParamsChange ->", event);
+        console.log("OnParamsChange ->", event);
     }
 
     defineFeatures() 
@@ -368,6 +372,7 @@ class  Project
         
         const renderPass:SSAARenderPass = new SSAARenderPass(this.scene, this.camera);
         this.renderPass = renderPass;
+        this.AAQuality = Project.DEFAULT_AA_QUALITY;
         this.filmPass = new MyFilmPass(this.fpStren, 0, 0, 0.0);
         
         if( this.isMobile )
@@ -634,10 +639,27 @@ class  Project
     }
 
     frameTimeHistory:number[] = [];
+    aaThreshold:Vector2 = new Vector2(1/60, 1/40);
     lastAAChange:number = 0;
+    autoAdujstAA:boolean = false;
+    static DEFAULT_AA_QUALITY:number = 3;
+    static CAPTURE_AA_QUALITY:number = 4;
+    savedAAQuality:number = 3;
+    get AAQuality ():number
+    {
+        return this.renderPass.sampleLevel;
+    }
+
+    set AAQuality (v:number)
+    {
+        this.renderPass.sampleLevel = v;
+    }
+
     adjustAA(dt:number ) // humm ...
     {
         if(Project.GetContext() == FXContext.CAPTURE || this.isMobile)
+            return ;
+        if( !this.autoAdujstAA)
             return ;
 
         this.frameTimeHistory.push(dt);
@@ -660,16 +682,17 @@ class  Project
 
         if( ct - this.lastAAChange > 1000)
         {
-            if( avg < 0.017 && current < 4)
+            if( avg < this.aaThreshold.x && current < 4)
             {
                 this.renderPass.sampleLevel++;
                 this.lastAAChange = ct;
             }
-            else if( avg > 0.017 && current > 1)
+            else if( avg > this.aaThreshold.y && current > 1)
             {
                 this.renderPass.sampleLevel--;
                 this.lastAAChange = ct;
             }
+            
         }
 
         //console.log( "AA", avg, this.renderPass.sampleLevel);
@@ -839,7 +862,8 @@ class  Project
         onCaptureStart();
         this.capturing = true;
         Designer.instance.SetCaptureMode(true);
-        this.renderPass.sampleLevel = 4;
+        this.savedAAQuality = this.AAQuality;
+        this.AAQuality = Project.CAPTURE_AA_QUALITY;
         this.HandleResize();
         this.saveAsImage();
     }
@@ -852,7 +876,8 @@ class  Project
         onCaptureStart();
         this.capturingBP = true;
         Designer.instance.SetCaptureBPMode(true);
-        this.renderPass.sampleLevel = 4;
+        this.savedAAQuality = this.AAQuality;
+        this.AAQuality = Project.CAPTURE_AA_QUALITY;
         this.HandleResize();
         this.saveBPAsImage();
     }
@@ -953,6 +978,7 @@ class  Project
             this.camera.clearViewOffset()
             this.capturing = false;
             this.capturingBP = false;
+            this.AAQuality = this.savedAAQuality;
             this.HandleResize();
             this.composer.render();
             onCaptureEnd();
@@ -968,6 +994,7 @@ class  Project
             this.camera.clearViewOffset()
             this.capturing = false;
             this.capturingBP = false;
+            this.AAQuality = this.savedAAQuality;
             this.HandleResize();
             this.composer.render();
             onCaptureEnd();

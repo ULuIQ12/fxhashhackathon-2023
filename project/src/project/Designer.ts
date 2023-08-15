@@ -98,6 +98,10 @@ class Designer extends Group
 
     updateLaunchPos(pos:Vector2)
     {
+        
+        pos.x = parseFloat( pos.x.toFixed(2) );
+        pos.y = parseFloat( pos.y.toFixed(2) );
+        
         this.launchPosition.copy(pos);
         const msg:{} = {};
         msg[Project.SX_PARAM_ID] = this.launchPosition.x;

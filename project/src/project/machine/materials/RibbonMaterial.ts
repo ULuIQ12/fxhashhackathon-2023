@@ -9,7 +9,7 @@ class RibbonMaterial extends MeshBasicMaterial
     randTex:Texture;
     constructor(parameters:MeshBasicMaterialParameters, perlinOptions:any = null)
     {
-        parameters.alphaTest = 0.1;
+        parameters.alphaTest = 0.05;
         parameters.forceSinglePass = true;
         //parameters.depthWrite = false;
         //parameters.depthTest = false;

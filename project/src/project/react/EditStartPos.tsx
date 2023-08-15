@@ -42,6 +42,7 @@ export default function EditStartPos( props ) {
 
         const normPos:Vector2 = Designer.instance.launchPosition;
         const scaled:Vector2 = scaleNormalizedPos( normPos );
+        
         setPX( scaled.x );
         setPY( scaled.y );
 

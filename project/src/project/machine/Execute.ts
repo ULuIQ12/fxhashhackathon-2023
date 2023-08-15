@@ -52,7 +52,7 @@ class Execute extends Group
     backgroundMesh:Mesh;
     borderMask:Group;
 
-    static USER_INACTIVITY_TIMEOUT:number = 2000; // 2 seconds
+    static USER_INACTIVITY_TIMEOUT:number = 3000;
     lastUserInteractionTime:number = 0 ;
     
     constructor(modules:Module[])

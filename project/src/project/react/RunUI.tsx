@@ -2,12 +2,13 @@ import { Box, Button, ButtonGroup, Fab, Fade, IconButton, LinearProgress, Stack,
 import * as React from 'react';
 import ModuleMenu from './ModuleMenu';
 import BlockDrawer from './BlocksDrawer';
-import { Camera, DesignServices, Pause, PlayArrow, RocketLaunch, SettingsApplications, Stop } from '@mui/icons-material';
+import { BlurOn, Camera, DesignServices, Pause, PlayArrow, RocketLaunch, SettingsApplications, Stop } from '@mui/icons-material';
 import { Execute } from '../machine/Execute';
 import { Project } from '../Project';
 import { FXContext } from '../../helpers/FXSnippet';
 import CaptureModal from './CaptureModal';
 import CaptureMenu from './CaptureMenu';
+import AAMenu from './AAMenu';
 import { Params } from '../../helpers/Params';
 
 let exeInstance:any = null;
@@ -34,6 +35,7 @@ export default function RunUI({changeModeCallback}) {
     const [visible, setVisible] = React.useState(true);
     const [captureMenuVisible, setCaptureMenuVisible] = React.useState(false);
     const [captureModalVisible, setCaptureModalVisible] = React.useState(false);
+    const [aaOpen, setAAOpen] = React.useState(false);
 
     const theme = useTheme();
     const extProgress = React.useRef(0);
@@ -122,6 +124,14 @@ export default function RunUI({changeModeCallback}) {
             );
     }
 
+    const onAAClick = (event) => {
+        setAAOpen(true);
+    }
+
+    const handleAAClose = () => {
+        setAAOpen(false);
+    }
+
     function GetTopLeftButtons()
     {
         if( Project.GetContext() == FXContext.MINTING || ( Project.GetContext() == FXContext.STANDALONE && Project.SUPER_SECRET_CHEAT_MODE_ENABLED) )
@@ -143,6 +153,13 @@ export default function RunUI({changeModeCallback}) {
                             </Fab>
                         </Tooltip>
                     </Zoom>
+                    <Zoom in={true} timeout={transitionDuration} style={{ transitionDelay:'200ms'}} unmountOnExit>
+                        <Tooltip title="Adjust anti-alilasing" placement="right">
+                            <Fab color="primary" aria-label="run" size='small' onClick={onAAClick}>
+                                <BlurOn />
+                            </Fab>
+                        </Tooltip>
+                    </Zoom>
                 </Stack>
             )
         }
@@ -154,6 +171,13 @@ export default function RunUI({changeModeCallback}) {
                         <Tooltip title="Export a png capture" placement="right">
                             <Fab color="primary" aria-label="run" onClick={onCaptureClick}>
                                 <Camera />
+                            </Fab>
+                        </Tooltip>
+                    </Zoom>
+                    <Zoom in={true} timeout={transitionDuration} style={{ transitionDelay:'200ms'}} unmountOnExit>
+                        <Tooltip title="Adjust anti-alilasing" placement="right">
+                            <Fab color="primary" aria-label="run" size='small' onClick={onAAClick}>
+                                <BlurOn />
                             </Fab>
                         </Tooltip>
                     </Zoom>
@@ -190,12 +214,11 @@ export default function RunUI({changeModeCallback}) {
                     alignItems: 'left',
                     verticalAlign: 'middle',
                     width: '100%',
-                    height: '4em',
+                    height: '3em',
                     bottom: '0px',
-                    
                     }}>
-                    <Box sx={{display:'flex', float:'left', marginLeft:'0',padding:'1em'}}>
-                        <ButtonGroup variant='contained' color='primary'>
+                    <Box sx={{display:'flex', float:'left', marginLeft:'0',padding:'0', mt:'auto', mb:'auto', height:'100%', verticalAlign:'middle'}}>
+                        <ButtonGroup variant='outlined'>
                             <IconButton color="warning" sx={{pointerEvents:'all'}}  onClick={onPlayClick}><PlayArrow/></IconButton>
                             <IconButton color="warning" sx={{pointerEvents:'all'}}  onClick={onPauseClick}><Pause/></IconButton>
                             <IconButton color="warning" sx={{pointerEvents:'all'}} onClick={onStopClick}><Stop/></IconButton>
@@ -219,7 +242,9 @@ export default function RunUI({changeModeCallback}) {
                 </Box>
             </Fade>
             <CaptureMenu open={captureMenuVisible} onClose={handleCaptureMenuClose} /> 
+            <AAMenu open={aaOpen} onClose={handleAAClose} />
             <CaptureModal open={captureModalVisible}/>
+            
         </Box>
     )
 }

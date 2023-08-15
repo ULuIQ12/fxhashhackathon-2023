@@ -757,9 +757,12 @@ class Build extends Group
         for( let i:number = 0; i<2; i++)
         {
             typeTable.push(ModuleType.WaveMod);
+            typeTable.push(ModuleType.Rotator);
+            typeTable.push(ModuleType.Perlin);
+            typeTable.push(ModuleType.Switch);
         }
 
-        typeTable.push(ModuleType.Block, ModuleType.Party, ModuleType.Spray, ModuleType.Stamp,  ModuleType.Rotator, ModuleType.Perlin, ModuleType.Switch);
+        typeTable.push(ModuleType.Block, ModuleType.Party, ModuleType.Spray, ModuleType.Stamp);
         
         let placedModules:number = 0;
         let lastModule:Module = null;
@@ -1100,7 +1103,7 @@ class Build extends Group
 
         const m:Module = freemodule;
         // add a random drawing element
-        const typeTable:ModuleType[] = [ModuleType.Party, ModuleType.Spray];
+        const typeTable:ModuleType[] = [ModuleType.Party, ModuleType.Spray, ModuleType.Stamp];
         const type:ModuleType = typeTable[Math.floor(Math.random() * typeTable.length)];
         m.type = type;
         const typenum:number = Object.values(ModuleType).indexOf(m.type);
