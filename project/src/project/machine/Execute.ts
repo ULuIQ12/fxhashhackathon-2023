@@ -134,7 +134,7 @@ class Execute extends Group
             this.overflowMaterial = new MeshBasicMaterial({color:bodyCol});
             
             const bgMat:MeshBasicMaterial = new MeshBasicMaterial({color:bgCol, transparent:false, forceSinglePass:true});
-            this.borderMaterial = new MeshBasicMaterial({color:bgCol});
+            this.borderMaterial = new MeshBasicMaterial({color:bgCol.clone().offsetHSL(0,0,0.1)});
             this.backgroundMaterial = bgMat;
 
             const bgMesh:Mesh = new Mesh(new PlaneGeometry(Execute.worldSize.x, Execute.worldSize.y), bgMat);
@@ -184,7 +184,7 @@ class Execute extends Group
             this.backgroundMesh.geometry.dispose();
             this.backgroundMesh.geometry = new PlaneGeometry(Execute.worldSize.x, Execute.worldSize.y);
             //this.borderMaterial.color.copy(Palette.background.clone().offsetHSL(0.0,0.0,0.2));
-            this.borderMaterial.color.copy(Palette.background);
+            this.borderMaterial.color.copy(Palette.background.clone().offsetHSL(0.0,0.0,0.1));
             //this.borderMaterial.color.set(1,0,0);
             while( this.borderMask.children.length > 0)
             {

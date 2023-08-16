@@ -419,7 +419,9 @@ class SwitchConfig extends ModConfig
     mass:FloatConfigParam = { id: "mass", name: "Mass", desc: "The mass of the block", type: "number", default: 1, value: 1, exposed:false, options: {min: 0, max: 5}};
     interval:FloatConfigParam = { id: "frequency", name: "Interval",desc: "Time between switches", type: "number", default: 3, value: 3, exposed:true, options: {min: 2, max: 25}};
     start:BoolConfigParam = { id: "start", name: "Starts off/on",desc: "Initial state",  type: "boolean", default: false, value: false, exposed:true, options: {}};
+    balance:FloatConfigParam = { id: "balance", name: "Balance", desc: "Length of one state vs. the other", type: "number", default: 4, value: 4, exposed:true, options: {min: 0.2, max: 0.8}};
     combineRule:BoolConfigParam = { id: "combineRule", name: "Combine AND / OR",desc: "How this combines with other switches",  type: "boolean", default: false, value: false, exposed:true, options: {}};
+    
 }
 
 class RocketConfig extends ModConfig

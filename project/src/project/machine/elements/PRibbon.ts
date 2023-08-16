@@ -485,9 +485,9 @@ class PRibbon extends Group implements IElement
             {
                 const config:SwitchConfig = mod.config as SwitchConfig;
                 if( !config.combineRule.value ) 
-                    isOn = (isOn && SwitchElem.getValue( config, this.stepCounter));
+                    isOn = (isOn && SwitchElem.getValue( config, this.stepCounter*.25));
                 else 
-                    isOn = (isOn || SwitchElem.getValue( config, this.stepCounter));
+                    isOn = (isOn || SwitchElem.getValue( config, this.stepCounter*.25));
             }
         }
 

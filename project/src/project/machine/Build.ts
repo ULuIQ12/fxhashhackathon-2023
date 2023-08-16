@@ -94,8 +94,7 @@ class Build extends Group
     }
 
     onClick(event)
-    {
-        
+    {        
         const p:Vector2 = Project.instance.pointer;
         if( event.type == "touchend" )
         {
@@ -105,12 +104,7 @@ class Build extends Group
             );
         }
 
-        
-        
         const mod:ModuleVis = this.raycastModules(p);
-
-        //console.log( "Build pointer up", event, mod, this.justReleaseABlock, this.isDragging, this.checkCursorAvailability());  
-        //console.log("click", mod, p);
         if(mod != null 
             && this.checkCursorAvailability()
             && !this.justReleaseABlock
@@ -150,17 +144,9 @@ class Build extends Group
     {
         if( this.isDragging)
             return;
-        
-        // create a new module, set it to the mouse position, add it to the scene, and set it as the dragBlock and set the isDragging flag to true
+                
         
         const dragPt:Vector2 = Project.instance.pointer;
-        /*
-        if( event.type == "touchstart")
-        {
-            dragPt.set( ( event.touches[0].clientX / window.innerWidth ) * 2 - 1,
-            - ( event.touches[0].clientY / window.innerHeight ) * 2 + 1 );
-        }
-        */
         this.ghostBlock.visible = true;
         const pos:Vector3 = this.raycastPlane(dragPt);
         if( pos == null)
@@ -182,24 +168,10 @@ class Build extends Group
         this.ghostBlock.visible = true;
         this.ghostBlock.position.copy(pos);
 
-
-
         if( Project.GetContext() == FXContext.CAPTURE)
             return;
 
         window.addEventListener("pointerup", this.stopDrag);
-
-        /*   
-        if( !onclick)
-        {
-            window.addEventListener("pointerup", this.stopDrag);
-            window.addEventListener("touchend", this.stopDrag);
-        }
-        else 
-        {
-            window.addEventListener("pointerdown", this.stopDrag);
-        }
-        */
     }
 
     clearAllBlocks( updateParam:boolean = true)
@@ -900,6 +872,7 @@ class Build extends Group
                 {
                     const c:SwitchConfig = config as SwitchConfig;
                     FloatConfigParam.Randomize(c.interval);
+                    FloatConfigParam.Randomize(c.balance);
                     BoolConfigParam.Randomize(c.combineRule);
                     BoolConfigParam.Randomize(c.start);
                 }
