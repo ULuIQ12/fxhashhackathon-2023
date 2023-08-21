@@ -46,7 +46,8 @@ class OutlinePartTop extends MeshBasicMaterial
                 
                 gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
                 vPositionW = vec3(modelMatrix * instanceMatrix * vec4(position, 1.));
-                vPosition2 = position;
+                vPosition2 = position ;
+                
           `
             );
 
@@ -171,7 +172,7 @@ class OutlinePartTop extends MeshBasicMaterial
                 else if( variant == 4.0 )
                     l = 1.0 - step(0.0, sdBox(tuv, vec2(0.85, 0.85*.5)));
                 else if( variant == 5.0 )
-                    l = 1.0;
+                    l = 1.0 - step(0.0, sdCircle(tuv, 0.95));
 
                 if( variant != 5.0)
                 {

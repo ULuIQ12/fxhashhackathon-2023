@@ -1,4 +1,4 @@
-import { BufferGeometry, Color, DynamicDrawUsage, Group,InstancedMesh,Mesh,MeshBasicMaterial,Object3D,PlaneGeometry,Vector2 } from "three";
+import { BufferGeometry, Color, DynamicDrawUsage, Group,InstancedMesh,Mesh,MeshBasicMaterial,Object3D,PlaneGeometry,Vector2,SRGBColorSpace } from "three";
 
 import { Collider, ColliderDesc, JointData, RigidBody, RigidBodyDesc, World } from "@dimforge/rapier2d";
 import { Vector2 as WVector2} from "@dimforge/rapier2d";
@@ -17,6 +17,7 @@ import { PerlinMod } from "./elements/PerlinMod";
 import { Rocket } from "./elements/Rocket";
 import { Build } from "./Build";
 import { Stamp } from "./elements/Stamp";
+import { OverlayDistressMat } from "./materials/OverlayDistressMat";
 
 
 enum ExecuteState
@@ -120,6 +121,9 @@ class Execute extends Group
 
     borderMaterial:MeshBasicMaterial;
     overflowMaterial:MeshBasicMaterial;
+    overlayMaterial:MeshBasicMaterial;
+    overlayGeom:BufferGeometry;
+    overlay:Mesh;
     // a background, a frame, and a mask for the overflow
     initBG()
     {
@@ -127,7 +131,7 @@ class Execute extends Group
         const hbw:number = bw/2;
         const overflowW:number = 200;
         const bgCol:Color = Palette.background == undefined? new Color(0x000000) : Palette.background;
-        const bodyCol:Color = new Color(0x242424).convertLinearToSRGB();;
+        const bodyCol:Color = new Color(0x242424).convertLinearToSRGB();
         
         if( this.backgroundMesh == undefined)
         {
@@ -176,7 +180,23 @@ class Execute extends Group
             const oRight:Mesh = new Mesh(overflowGeom2, this.overflowMaterial);
             oRight.position.set(Execute.hWorldSize.x + overflowW * .5,0, .9);
             this.borderMask.add(oRight);
+
+            const overlayGeom:BufferGeometry = new PlaneGeometry(Execute.worldSize.x, Execute.worldSize.y);
             
+            const bhsl:any = {} 
+            const oCol:Color = new Color();
+            if( Palette.background != undefined)
+            {
+                Palette.background.getHSL(bhsl, SRGBColorSpace);
+                oCol.copy(Palette.background).offsetHSL(0, 0, (bhsl.l < .5)?0.1:0.5);
+            }
+            
+            this.overlayMaterial = new OverlayDistressMat({color:oCol, transparent:true});
+            this.overlay = new Mesh(overlayGeom, this.overlayMaterial);
+            this.overlay.frustrumCulled = false;
+            this.overlay.renderOrder = 10000;
+            this.overlay.position.set(0,0, 4.9);
+            super.add(this.overlay);
         }
         else 
         {
@@ -222,6 +242,15 @@ class Execute extends Group
             const oRight:Mesh = new Mesh(overflowGeom2, this.overflowMaterial);
             oRight.position.set(Execute.hWorldSize.x + overflowW * .5,0, .9);
             this.borderMask.add(oRight);
+
+            const bhsl:any = {} 
+            Palette.background.getHSL(bhsl, SRGBColorSpace);
+            const oCol:Color =  Palette.background.clone().offsetHSL(0, 0, (bhsl.l < .75)?0.1:.5);
+            //oCol.setHSL( 0, 1, 0.5);
+            this.overlayMaterial.color.copy(oCol);
+            this.overlayMaterial.needUpdate = true;
+            this.overlay.geometry.dispose();
+            this.overlay.geometry = new PlaneGeometry(Execute.worldSize.x, Execute.worldSize.y);
         }
         
        
@@ -284,6 +313,8 @@ class Execute extends Group
     ResetSim()
     {
         this.state = ExecuteState.Init;
+        this.endingStart = 0;
+        this.readyForPreview = false;
         this.cleanWorld();
         this.resetModules();
 
@@ -704,6 +735,9 @@ class Execute extends Group
         return index;
     }
 
+    endingStart:number = 0 ;
+    endingDuration:number = 120; // steps to allow the physics to maybe come to a rest
+    readyForPreview:boolean = false;
     update( dt:number, elapsed:number)
     {
         if( this.state < ExecuteState.Ready ) 
@@ -713,8 +747,32 @@ class Execute extends Group
         {
             const progress:number = this.calcProgress();
             
-            if(progress < 1)
+            if( progress < 1)
+            {
                 this.simulationStep(dt, elapsed);
+            }
+            else if(this.endingStart == 0)
+            {
+                
+                this.endingStart = 1;
+                this.simulationStep(dt, elapsed);
+                
+            }
+            else if( this.endingStart != 0)
+            {
+                
+                if( this.endingStart < this.endingDuration)
+                {
+                    this.endingStart++;
+                    this.simulationStep(dt, elapsed);
+                }
+                else 
+                {
+                    this.readyForPreview = true;
+                }
+
+
+            }
 
             this.updateUI();
         }

@@ -322,6 +322,7 @@ export default function HelpPage(props)
               <ul>
                 <li>Interval : The delay between toggle.</li>
                 <li>Starts on/off : Determines the starting state of the switch.</li>
+                <li>Balance : The length of one state compared to the other. if the cursor is centered, on and off have the same duration. Works in conjunction with Interval and Starts off/on</li>
                 <li>Combine AND/OR : Defines how multiple switches combines their influences when adjacent to the same block, either logical AND or OR.</li>
               </ul>
             </Typography>
@@ -446,8 +447,8 @@ export default function HelpPage(props)
                 </Typography>
                 <Typography variant="body1" gutterBottom>
                     The Incredible Contraption is a new kind of experience for collectors designed for #fxhackathon2023, enabled by the fx(params) system. 
-                    Build one ( or several ) contraption(s) using the provided blocks and watch them come to life, spreading paint on the canvas,
-                    drawing lines and shapes, and creating unique art. 
+                    Build one (or several) contraption(s) using the provided blocks and watch them come to life, spreading paint on the canvas,
+                    drawing lines and shapes, and creating unique compositions. 
                     <br/>
                     Who said you needed to know how to code to create generative art ? With the Incredible Contraption, you can use many tools frequently seen in
                     generative art, such as noise, particles, physics, and more, without having to write a single line of code, but instead by using a "easy to use, hard to master" set of rules.
@@ -475,7 +476,7 @@ export default function HelpPage(props)
                 <Typography variant="h5" gutterBottom>
                     <u>Usage</u>
                 </Typography>
-                <Typography variant="body1" gutterBottom>
+                <Typography component={'span'} variant="body1" gutterBottom>
                     Place construction blocks on a 7x7 grid to create one or several contraptions. Blocks have a specific function and can be combined to create complex behaviors.
                     Each block is physically simulated and will interact with the other blocks (collision, weight distribution, etc...), but they do not interact with the drawn 
                     elements on the canvas.
@@ -643,7 +644,8 @@ export default function HelpPage(props)
                       Before or after the mint, you can export PNG captures of both your design blueprint and the produced artwork.
                       The exports menu is available from the top right button in Simulation mode by clicking the <Camera fontSize='small' sx={{mb:-.6}}/> button.
                       <br/><br/>
-                      In this menu, select a size for your exports in the dropdowns, then press the corresponding export button. The export will be downloaded to your computer.
+                      In this menu, select a size for your exports in the dropdowns, then press the corresponding export button. You can export both the artwork
+                      and the blueprint that generated it. The export will be downloaded to your computer.
                       The larger the resolution, the longer it will take to generate the export, and the larger the file will be.<br/>
                       Warning : the maximum size for the artwork can get very large ( 800 MB ), and the export can take a very long time to generate. Be patient.
                       <br/><br/>
@@ -670,7 +672,7 @@ export default function HelpPage(props)
                   If your contraption doesn't move much or always paint on the same spot, you'll get large stacks of layers, and the simulation will slow down.
                   <br/><br/>
                   Lastly, in design mode, you can adjust the anti-aliasing. The method used is quite demanding, and you can get some serious performances gains by reducing quality.
-                  This quality settings only applies to your browser window, export are always max quality.
+                  This quality settings only applies to your browser window, exports are always max quality.
                   <br/><br/>
                 </Typography>
             </Box>

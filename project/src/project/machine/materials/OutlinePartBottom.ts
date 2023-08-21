@@ -1,5 +1,8 @@
 import { MeshBasicMaterial, MeshBasicMaterialParameters } from "three";
 
+/**
+ * not used anymore, used to be for two layers particles
+ */
 class OutlinePartBottom extends MeshBasicMaterial
 {
     

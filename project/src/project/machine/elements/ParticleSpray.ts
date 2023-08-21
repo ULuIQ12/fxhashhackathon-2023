@@ -286,9 +286,10 @@ class ParticleSpray extends Group implements IElement
             collider.setEnabled(false); // activate collider only after a few frames ? 
             
         }
-        rbp.setAngvel(Rand.fBetween(-10,10), true);
+        //rbp.setAngvel(Rand.fBetween(-10,10), true);
         rbp.setLinvel({x:force.x, y:force.y }, true);
-        rbp.setRotation(Rand.fBetween(0,Math.PI*2), true);
+        //rbp.setRotation(Rand.fBetween(0,Math.PI*2), true);
+        rbp.setRotation(angle + Math.PI/2, true);
 
         const pi:PartInfos = new PartInfos();
         pi.rb = rbp;

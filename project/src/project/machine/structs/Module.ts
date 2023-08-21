@@ -410,7 +410,7 @@ class PerlinConfig extends ModConfig
 {
     mass:FloatConfigParam = { id: "mass", name: "Mass", desc: "The mass of the block", type: "number", default: 1, value: 1, exposed:false, options: {min: 0, max: 5}};
     frequency:FloatConfigParam = { id: "frequency", name: "Frequency", desc: "Controls the scale of the noise", type: "number", default: 3, value: 3, exposed:true, options: {min: 0.001, max: 0.005}};
-    amplitude:FloatConfigParam = { id: "amplitude", name: "Amplitude", desc: "Modifies the strength of the effect", type: "number", default: 1, value: 1, exposed:true, options: {min: 0.01, max: 1}};
+    amplitude:FloatConfigParam = { id: "amplitude", name: "Amplitude", desc: "Modifies the strength of the effect", type: "number", default: 1, value: 1, exposed:true, options: {min: 0.05, max: 1}};
     octaves:FloatConfigParam = { id: "octaves", name: "Octaves", desc: "How many layers of noise", type: "number", default: 3, value: 3, exposed:true, options: {min: 1, max: 5}};
 }
 

@@ -344,12 +344,14 @@ export default function BuildUI(props) {
                     
                 </Stack>
             </Box>
+            
             <span style={{position:'absolute', backgroundColor:'rgba(0,0,0,0)', opacity:'0'}} ref={span}>{title}</span>
             <Box id="TopRightButtons" sx={{
                 position:'absolute',
                 right: '1em',
                 top: '1em',
-                pointerEvents: 'all',                
+                pointerEvents: 'all',
+                display:'none'
               }} >
                 <TextField 
                     InputProps={{
@@ -373,6 +375,7 @@ export default function BuildUI(props) {
                     onChange={handleTitleChange}
                     variant="outlined" />
             </Box>
+            
             <Dialog
                 open={autoConfirmOpen}
                 onClose={handleAutoWarningClose}

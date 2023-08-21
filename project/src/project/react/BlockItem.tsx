@@ -45,14 +45,14 @@ export default function BlockItem({data, dragStartCallback}) {
     function handleTouchStart(event)
     {
       dragStartCallback();
-      console.log( "touch start: ", event );
+      //console.log( "touch start: ", event );
       Build.AddBlock(data, event, false);
     }
 
     function handleTouchEnd(event)
     {
       
-      console.log( "touch end: ", event );
+      //console.log( "touch end: ", event );
       //Build.AddBlock(data, event, true);
     }
 

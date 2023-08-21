@@ -129,7 +129,7 @@ class Grid extends Group
         const title:Mesh = new Mesh(titleGeom, titleMat);
         title.frustrumCulled = false;
         title.position.set(0, 4.1, 1.0)
-        this.buildArea.add(title);
+        
         ////////////////////////////////////////////////////////////
         const iterationWidth:number = 512;
         const iterationHeight:number = 256;
@@ -163,7 +163,9 @@ class Grid extends Group
         iteration.frustrumCulled = false;
         iteration.position.set(4 - sx, -4, 1.0)
 
-        this.buildArea.add(iteration);
+        // trailer
+        //this.buildArea.add(title); 
+        //this.buildArea.add(iteration);
         
         this.createLinks();
     }

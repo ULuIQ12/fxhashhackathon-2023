@@ -338,13 +338,13 @@ class Build extends Group
 
     static SetModuleOrientation(m:Module, orientation:ModuleOrientation)
     {
+        
         //console.log("SetModuleOrientation", m, orientation);
         Build.instance.setModuleOrientation(m, orientation);
     }
 
     setModuleOrientation(m:Module, orientation:ModuleOrientation)
     {
-        //console.log("setModuleOrientation", m, orientation);
         m.orientation = orientation;
 
         Designer.OnModulesChanged();
@@ -1133,6 +1133,7 @@ class Build extends Group
             !isModuleMenuOpen() 
             && !hasAnyMenuOpen()
             && !isOnboardingOpen()
+            && !isOrientationMenuOpen()
         )
     }
 }

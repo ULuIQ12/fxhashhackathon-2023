@@ -9,6 +9,9 @@ import { PerlinMod } from "./PerlinMod";
 import { WaveMod } from "./WaveMod";
 import { SwitchElem } from "./SwitchElem";
 
+/**
+ * add local force every frame
+ */
 class Motor extends Object3D implements IElement
 {
     module: Module;

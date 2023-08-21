@@ -1,4 +1,4 @@
-import { Box2, Group, MathUtils, OrthographicCamera, Vector2, Vector3 } from "three";
+import { Box2, Group, MathUtils, OrthographicCamera, Vector2, Vector3, Color } from "three";
 import { Build } from "./machine/Build";
 import { Project } from "./Project";
 import { Module, ModuleType } from "./machine/structs/Module";
@@ -153,7 +153,7 @@ class Designer extends Group
     
     zoomTarget:number = Designer.ZOOMED_IN_TARGET;    
     zoomTransition:number = 0;
-    zoomTransitionDuration:number = 1;
+    zoomTransitionDuration:number = 1.5;
     
     setMode(mode:string)
     {
@@ -167,6 +167,8 @@ class Designer extends Group
             this.zoomTransition = 0;
             this.build.show();
             
+            Project.instance.scene.background = new Color(0x000000);
+
             if( this.execute != undefined)
                 this.execute.hide();
         }
@@ -175,6 +177,13 @@ class Designer extends Group
             this.zoomTarget = Designer.ZOOMED_OUT_TARGET;
             this.zoomTransition = 0;
             this.build.hide();
+
+            
+            const cam:OrthographicCamera = Project.instance.camera as OrthographicCamera;
+            cam.position.x = Execute.worldSize.x * Designer.instance.launchPosition.x;
+            cam.position.y = Execute.worldSize.y * Designer.instance.launchPosition.y;
+
+            Project.instance.scene.background = new Color( 0x242424 );
             
             if( this.execute != undefined)
                 this.execute.show();
@@ -274,6 +283,7 @@ class Designer extends Group
             const t:number = this.zoomTransition / this.zoomTransitionDuration;
             let mt:number = t;
             mt = Easing.easeInOutCirc(t);
+            //mt = Easing.easeInOutExpo(t);
             if( this.zoomTransition >= this.zoomTransitionDuration)
                 mt = 1;
             

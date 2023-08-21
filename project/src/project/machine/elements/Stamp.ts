@@ -81,8 +81,15 @@ class Stamp extends Group implements IElement
         const initCol:Color = new Color();
         const off:Vector2 = new Vector2();
 
-        if( colorVal == ColorMode.Random || colorVal == ColorMode.Rotating)
-            initCol.setHSL(0,0,1);
+        if( colorVal == ColorMode.Random)
+        {
+            const c:Color = Rand.option( Palette.colors);
+            initCol.copy(c);
+        }
+        else if( colorVal == ColorMode.Rotating)
+        {
+            Palette.GetInterpolatedColor( (this.stepCounter / this.maxSteps ) * 3, initCol)
+        }
         else
         {
             const c:number = Object.values(ColorMode).indexOf( colorVal) - 2;

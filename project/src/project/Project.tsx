@@ -18,13 +18,8 @@ import { PNGRGBAWriter } from '../3rdparty/dekapng';
 import { Execute } from "./machine/Execute";
 import { onCaptureEnd, onCaptureStart} from "./react/RunUI";
 import { updateProgress} from "./react/CaptureModal";
-import { DOMElement } from "react";
 import { MyFilmPass } from "./post/MyFilmPass";
 import JSONCrush from "jsoncrush";
-import { FlareSharp } from "@mui/icons-material";
-
-
-
 
 declare var $fx: any;
 class  Project
@@ -154,6 +149,7 @@ class  Project
             }
         }
 
+        Features.addFeature("Title", Params.getParam(Project.TITLE_PARAM_ID));
         Features.addFeature("Weight", weight.toFixed(1) + " kg");
         Features.addFeature("Blocks used", numBlocks);
         this.snippet.features(Features.feats);
@@ -608,8 +604,10 @@ class  Project
             this.handleContentAnimation(dt,elapsed);
             
 
-            const progress:number = Execute.instance.calcProgress();
-            if( progress >= 1)
+            //const progress:number = Execute.instance.calcProgress();
+            const ready:boolean = Execute.instance.readyForPreview;
+            //if( progress >= 1)
+            if( ready)
             {
                 Designer.instance.SetCaptureMode(true);
                 this.HandleResize();
@@ -655,7 +653,7 @@ class  Project
         this.renderPass.sampleLevel = v;
     }
 
-    adjustAA(dt:number ) // humm ...
+    adjustAA(dt:number ) // humm ... doesn't work well enough
     {
         if(Project.GetContext() == FXContext.CAPTURE || this.isMobile)
             return ;

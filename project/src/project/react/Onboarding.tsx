@@ -1,8 +1,8 @@
-import { Architecture, ArrowBack, ArrowForward, ArrowForwardOutlined, ArrowRight, AspectRatio, Brush, Build, CheckBoxOutlineBlank, CropSquare, Delete, DesignServices, Done, Mouse, OpenWith, Palette, PanTool, PrecisionManufacturing, RocketLaunch, Settings, SettingsSuggest, Sync, ZoomIn } from '@mui/icons-material';
+import { Architecture, ArrowBack, ArrowForward, ArrowForwardOutlined, ArrowRight, AspectRatio, Brush, Build, CheckBoxOutlineBlank, ContentCopy, CropSquare, Delete, DesignServices, Done, Mouse, OpenWith, Palette, PanTool, PrecisionManufacturing, RocketLaunch, Settings, SettingsSuggest, Sync, ZoomIn } from '@mui/icons-material';
 import { Box, Button, Dialog, DialogContent, DialogTitle, Stack, Step, StepButton, StepLabel, Stepper, Typography } from '@mui/material';
 import * as React from 'react';
 
-const steps = ['Welcome', 'How to build', 'Edit blocks', 'Test'];
+const steps = ['Welcome', 'How to build', 'Customize', 'Iterate'];
 
 /**
  * Little onboarding tutorial that appears when the app is first opened in minting mode
@@ -59,8 +59,8 @@ export default function Onboarding(props) {
             backgroundSize: 'contain',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
-            width: '140px',
-            height: '140px',
+            width: '120px',
+            height: '120px',
             display:'inline-block',
             border:'1px dashed white',
             borderRadius:'4px',
@@ -112,8 +112,8 @@ export default function Onboarding(props) {
                     Welcome to The Incredible Contraption!<br/><br/>
                     <Box
                     sx={{ textAlign:'justify', textJustify:'inter-word'}}>
-                        Design an autonomous contraption that will create your unique artwork using construction blocks{blockIcon()} with various effects.
-                        Play around with the different blocks{blockIcon()}, their properties and their placement to express yourself in <b>your own unique way</b>.
+                        Design an autonomous contraption that will create your unique artwork using construction blocks with various effects.
+                        Play around with the different blocks, their properties and their placement to express yourself in <b>your own unique way</b>.
                     </Box>
                     <br/>
                     <Stack direction="row" sx={{verticalAlign:'middle', justifyContent:'center', alignItems:'center' }}>
@@ -139,9 +139,9 @@ export default function Onboarding(props) {
                     
                     <Box
                     sx={{ textAlign:'justify', textJustify:'inter-word'}}>
-                        You build your contraption by placing blocks{blockIcon()} on a grid.
-                        To do so you can either click on the block{blockIcon()} in the bottom drawer and then click on a grid emplacement to place it, 
-                        or you can simply click and drag the block{blockIcon()}.
+                        You build your contraption by placing blocks on a grid.
+                        To do so you can either click on the block in the bottom drawer and then click on a grid emplacement to place it, 
+                        or you can simply click and drag the block.
                         Valid placement locations will be highlighted in blue, bad placement in red.
                     </Box>
                     <br/>
@@ -162,17 +162,17 @@ export default function Onboarding(props) {
                         An emplacement is valid if : 
                         <ul>
                             <li>It's inside the 7x7 zone delimited by a dashed border</li>
-                            <li>It's not already occupied by another block{blockIcon()}</li>
+                            <li>It's not already occupied by another block</li>
                         </ul>
                     </Box>
                     </Stack>
                     <br/>
                     <Box
                         sx={{ textAlign:'justify', textJustify:'inter-word'}}>
-                        Blocks{blockIcon()} come in three main categories: Structural, Drawing and Mods. 
+                        Blocks come in three main categories: Structural, Drawing and Mods. 
                         Structural blocks <Architecture fontSize='small' sx={{mb:-.8}}/> influence the movement of the contraption, Drawing blocks <Brush fontSize='small' sx={{mb:-.8}}/> draw / spray colors around and Mods blocks <SettingsSuggest fontSize='small' sx={{mb:-.8}}/> modify the behaviour of neighbouring blocks.
                         <br/>
-                        Two blocks{blockIcon()} orthogonally adjacent to each other will be connected and move as one.
+                        Two blocks orthogonally adjacent to each other will be connected and move as one.
                     </Box>
                 </Box>
             );
@@ -183,7 +183,8 @@ export default function Onboarding(props) {
                 <Box sx={stepBoxStyle}>
                     <Box
                         sx={{ textAlign:'justify', textJustify:'inter-word'}}>
-                        Click a block in your design to open a small contextual menu allowing you to <PanTool fontSize='small' sx={{mb:-.8}}/> move the block, <Delete fontSize='small' sx={{mb:-.8}}/> delete it, <Settings fontSize='small' sx={{mb:-.8}}/> configure its properties and <Sync fontSize='small' sx={{mb:-.8}}/> rotate it if applicable.
+                        Click a block in your design to open a small contextual menu allowing you to <PanTool fontSize='small' sx={{mb:-.8}}/> 
+                        move the block, <Delete fontSize='small' sx={{mb:-.8}}/> delete it,<ContentCopy fontSize='small' sx={{mb:-.8}}/> duplicate it, <Settings fontSize='small' sx={{mb:-.8}}/> configure its properties and <Sync fontSize='small' sx={{mb:-.8}}/> rotate it if applicable.
                         <br/>
                         The configure button <Settings fontSize='small' sx={{mb:-.8}}/> will open a more involved menu allowing you to change some properties of the block.
                     </Box>

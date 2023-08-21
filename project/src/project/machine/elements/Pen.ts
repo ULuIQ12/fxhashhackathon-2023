@@ -5,6 +5,7 @@ import { PStreamMaterial } from "../materials/PStreamMaterial";
 import { Rand } from "../../../helpers/Rand";
 import { Palette } from "../Palette";
 
+// with GL_Lines . Does not scale well, so was used for early testing only
 class Pen extends Group implements IElement
 {
     module: Module;

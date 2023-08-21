@@ -128,7 +128,7 @@ class ModuleVis extends Group
         
         this.lastOrientation = this.moduleRef.orientation;
         this.lastConfig = this.moduleRef.config;
-        // calculate the shortest rotation
+        
         let rot:number = targetRot - meshRot + this.additionalRotation;
         
         if( rot > Math.PI)
