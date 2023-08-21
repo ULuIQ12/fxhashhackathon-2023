@@ -351,7 +351,6 @@ export default function BuildUI(props) {
                 right: '1em',
                 top: '1em',
                 pointerEvents: 'all',
-                display:'none'
               }} >
                 <TextField 
                     InputProps={{

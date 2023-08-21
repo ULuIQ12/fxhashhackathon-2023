@@ -163,9 +163,9 @@ class Grid extends Group
         iteration.frustrumCulled = false;
         iteration.position.set(4 - sx, -4, 1.0)
 
-        // trailer
-        //this.buildArea.add(title); 
-        //this.buildArea.add(iteration);
+        
+        this.buildArea.add(title); 
+        this.buildArea.add(iteration);
         
         this.createLinks();
     }

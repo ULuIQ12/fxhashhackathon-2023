@@ -113,7 +113,7 @@ class  Project
 
     onParamsChange(event)
     {
-        console.log("OnParamsChange ->", event);
+        //console.log("OnParamsChange ->", event);
     }
 
     defineFeatures() 
@@ -123,20 +123,20 @@ class  Project
         if( crushed.length > 512 )
         {
             // we have a problem, should not happen, but hard to be sure. 512 feels large enough
-            console.log( "Crushed config : ", crushed, this.snippet );
+            //console.log( "Crushed config : ", crushed, this.snippet );
         }
 
         let weight:number = 0 ;
         let numBlocks:number = 0;
         if( crushed == undefined || crushed == "")
         {
-            console.log( "No modules to deserialize");
+            //console.log( "No modules to deserialize");
         }
         else 
         {
             const uncrushed:string = JSONCrush.uncrush(decodeURIComponent(crushed));
             const data:any[] = JSON.parse(uncrushed);
-            console.log( data ) ; 
+            //console.log( data ) ; 
             
             for( let i = 0; i < data.length; i++)
             {
@@ -169,7 +169,7 @@ class  Project
         await font.load();        
         document.fonts.add(font);
 
-        const font2 = new FontFace("Material+Icons", 'url(./fonts/MaterialIcons-Regular.ttf)');
+        const font2 = new FontFace("MaterialIcons", 'url(./fonts/MaterialIcons-Regular.ttf)');
         await font2.load();        
         document.fonts.add(font2);
 
@@ -423,8 +423,8 @@ class  Project
         let dx;
         let dy;
         this.aspect = wratio;
-
-        Designer.instance.updateSpaceAR(Designer.instance.currentAR, false);
+        if( Designer.instance != undefined)
+            Designer.instance.updateSpaceAR(Designer.instance.currentAR, false);
 
         let bw:number,bh:number;
         dx = mw;
