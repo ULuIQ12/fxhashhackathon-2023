@@ -4,6 +4,7 @@ import { Button, Container, Tooltip } from '@mui/material';
 import { Build } from '../machine/Build';
 import { ModuleType } from '../machine/structs/Module';
 import { Assets } from '../../helpers/Assets';
+import TouchRipple from '@mui/material/ButtonBase/TouchRipple';
 
 /**
  * Block button, handles click and drag
@@ -25,6 +26,7 @@ export default function BlockItem({data, dragStartCallback}) {
     tooltips[ModuleType.Rocket] = "Rocket : a one time power burst";
     tooltips[ModuleType.Stamp] = "Stamp : big transparent geometric shapes";
     
+
 
     //const [supportDragInput, setSupportDragInput] = React.useState(CSS.supports());
 
@@ -127,7 +129,8 @@ export default function BlockItem({data, dragStartCallback}) {
     }}
     >
       
-        <Tooltip title={tooltips[data.name]} placement="top" arrow>            
+        <Tooltip title={tooltips[data.name]} placement="top" arrow>
+        
             <Box sx={getBoxStyle} 
               onClick={handleClickStart} 
               onDragStart={handleDragStart} 
@@ -135,8 +138,8 @@ export default function BlockItem({data, dragStartCallback}) {
               onTouchEnd={handleTouchEnd}
               draggable 
               
-            />
-            
+            ></Box>
+        
         </Tooltip>
         
     </Box>

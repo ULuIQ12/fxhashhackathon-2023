@@ -44,7 +44,7 @@ class Designer extends Group
 
         this.initModules();
 
-        const ar:RunAR = Object.values(RunAR)[Number( Params.getParam(Project.AR_PARAM_ID) )];
+        const ar:RunAR = Object.values(RunAR)[ Math.floor( Number( Params.getParam(Project.AR_PARAM_ID) ) ) ];
         //console.log( "ar param : ","AR=", ar, "Param=",Params.getParam(Project.AR_PARAM_ID));
         if( ar != undefined)
             this.updateSpaceAR(ar);
@@ -370,10 +370,14 @@ class Designer extends Group
 
     DeserializeModules()
     {
-        const palnum:number = Number( Params.getParam(Project.PALETTE_PARAM_ID) );
-        if( palnum != undefined)
+        const palnum:number = Math.floor( Number( Params.getParam(Project.PALETTE_PARAM_ID) ) );
+        if( palnum != undefined && !isNaN(palnum))
         {
             Palette.SetupPalette(palnum);
+        }
+        else
+        {
+            Palette.SetupPalette(2);
         }
 
         const title:string = Params.getParam(Project.TITLE_PARAM_ID);

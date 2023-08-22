@@ -36,7 +36,7 @@ export default function InvalidAlert(props) {
           >
             <DialogTitle>
               <Warning fontSize='large' /><br/>
-              Your incredible contraption needs <b>at least one drawing block</b> (Spray or Brush).
+              Your incredible contraption needs <b>at least one drawing block</b> (Spray, Brush or Stamp).
             </DialogTitle>
             <DialogActions sx={{
                 alignContent:'center',

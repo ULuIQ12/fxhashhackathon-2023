@@ -20,6 +20,7 @@ import { onCaptureEnd, onCaptureStart} from "./react/RunUI";
 import { updateProgress} from "./react/CaptureModal";
 import { MyFilmPass } from "./post/MyFilmPass";
 import JSONCrush from "jsoncrush";
+import { Palette } from "./machine/Palette";
 
 declare var $fx: any;
 class  Project
@@ -97,7 +98,7 @@ class  Project
     {
         Params.addString(Project.CONFIG_PARAM_ID, "Config", UpdateType.CODE_DRIVEN, "", 0, 512);
         //Params.addInt(Project.PALETTE_PARAM_ID, "Palette", UpdateType.CODE_DRIVEN, 0, 99, BigInt(0) );
-        Params.addFloat(Project.PALETTE_PARAM_ID, "Palette", UpdateType.CODE_DRIVEN, 0, 99, 0 );
+        Params.addFloat(Project.PALETTE_PARAM_ID, "Palette", UpdateType.CODE_DRIVEN, 0, Palette.paletteValues.length-1 , 0 );
         //Params.addInt(Project.AR_PARAM_ID, "Aspect", UpdateType.CODE_DRIVEN, Object.values(RunAR).indexOf(RunAR.Square), Object.values(RunAR).length-1, BigInt(0) );
         Params.addFloat(Project.AR_PARAM_ID, "Aspect", UpdateType.CODE_DRIVEN, Object.values(RunAR).indexOf(RunAR.Square), Object.values(RunAR).length-1, 0 );
         
@@ -239,7 +240,7 @@ class  Project
         if( Project.GetContext() == FXContext.CAPTURE)
         {
             // force canvas at the right size from the start, just in case
-            const ar:RunAR = Object.values(RunAR)[Number( Params.getParam(Project.AR_PARAM_ID) )];
+            const ar:RunAR = Object.values(RunAR)[ Math.floor( Number( Params.getParam(Project.AR_PARAM_ID) ) )];
             const res:Vector2 = new Vector2();
             switch(ar)
             {
@@ -486,7 +487,7 @@ class  Project
         else if( Project.GetContext() == FXContext.CAPTURE)
         {
             
-            const arIndex:number = Number( Params.getParam(Project.AR_PARAM_ID) );
+            const arIndex:number = Math.floor( Number( Params.getParam(Project.AR_PARAM_ID) ) );
             
             const res:Vector2 = this.previewResolutions[arIndex];
             dx = res.x;
