@@ -26,10 +26,11 @@ export default function BlockItem({data, dragStartCallback}) {
     tooltips[ModuleType.Stamp] = "Stamp : big transparent geometric shapes";
     
 
-    
+    //const [supportDragInput, setSupportDragInput] = React.useState(CSS.supports());
 
     function handleDragStart(event)
     {
+        //console.log( "drag start: ", event );
         event.preventDefault();
         dragStartCallback();
         Build.AddBlock(data, event);
@@ -106,16 +107,17 @@ export default function BlockItem({data, dragStartCallback}) {
             backgroundPosition: 'center',
             width: '80px',
             height: '80px',
-
+            '&:hover': {
+              backgroundColor: '#2769b2',
+              
+            },
         }
 
     }
 
-
-
-
   return (
     <Box
+      
     sx={{
       boxShadow: '0px 0px 0px 3px rgba(255,255,255,.2)',
       borderRadius: '10px',
@@ -124,15 +126,19 @@ export default function BlockItem({data, dragStartCallback}) {
       blockSize: 'fit-content',
     }}
     >
+      
         <Tooltip title={tooltips[data.name]} placement="top" arrow>            
-            <Button sx={getBoxStyle} 
+            <Box sx={getBoxStyle} 
               onClick={handleClickStart} 
               onDragStart={handleDragStart} 
               onTouchStart={handleTouchStart} 
               onTouchEnd={handleTouchEnd}
-              draggable
+              draggable 
+              
             />
+            
         </Tooltip>
+        
     </Box>
     
   );

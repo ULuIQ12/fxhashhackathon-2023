@@ -393,9 +393,16 @@ class Designer extends Group
         }
         
         const uncrushed:string = JSONCrush.uncrush(decodeURIComponent(crushed));
-        const data:any[] = JSON.parse(uncrushed);
-        //console.log( "UnCrushed Serialized Modules: length = ", uncrushed.length , "\n" , data  );
-        this.build.BuildMachineFromData(data);
+        try {
+            const data:any[] = JSON.parse(uncrushed);
+            //console.log( "UnCrushed Serialized Modules: length = ", uncrushed.length , "\n" , data  );
+            this.build.BuildMachineFromData(data);
+    
+        }
+        catch(e)
+        {
+            this.build.autoBuildRandomMachine();
+        }
 
     }
 

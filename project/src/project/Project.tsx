@@ -123,6 +123,7 @@ class  Project
     {        
         // features extraction extraction, can't wait after loading to do that
         const crushed:string = Params.getParam(Project.CONFIG_PARAM_ID);
+
         if( crushed.length > 512 )
         {
             // we have a problem, should not happen, but hard to be sure. 512 feels large enough
@@ -138,18 +139,22 @@ class  Project
         else 
         {
             const uncrushed:string = JSONCrush.uncrush(decodeURIComponent(crushed));
-            const data:any[] = JSON.parse(uncrushed);
-            //console.log( data ) ; 
-            
-            for( let i = 0; i < data.length; i++)
-            {
-                const d:any = data[i];
-                if( d.c != undefined)
+            try { // on the click on the "variation button" in the minting screen, the config is not valid JSON, so we need to catch the error
+                const data:any[] = JSON.parse(uncrushed);
+                //console.log( data ) ; 
+                
+                for( let i = 0; i < data.length; i++)
                 {
-                    weight +=  d.c[0]*1/9 * 5;
-                    numBlocks++;
+                    const d:any = data[i];
+                    if( d.c != undefined)
+                    {
+                        weight +=  d.c[0]*1/9 * 5;
+                        numBlocks++;
+                    }
                 }
             }
+            catch(e) {}
+            
         }
 
         Features.addFeature("Title", Params.getParam(Project.TITLE_PARAM_ID));
