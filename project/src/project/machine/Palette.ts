@@ -69,7 +69,8 @@ class Palette
         ];
 
         const msg:{} = {};
-        msg[Project.PALETTE_PARAM_ID] = BigInt( p );
+        //msg[Project.PALETTE_PARAM_ID] = BigInt( p );
+        msg[Project.PALETTE_PARAM_ID] = p ;
 
         if( Project.GetContext() == FXContext.MINTING )
             Project.instance.snippet.emit(Params.UPDATE_SIGNAL,msg);

@@ -93,8 +93,8 @@ class IntParam extends ParamDef
         this.default = defaultVal;
         
         this.options = {
-            min:min,
-            max:max,
+            min:BigInt(min),
+            max:BigInt(max),
         }
     }
 }

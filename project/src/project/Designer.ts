@@ -46,8 +46,8 @@ class Designer extends Group
 
         const ar:RunAR = Object.values(RunAR)[Number( Params.getParam(Project.AR_PARAM_ID) )];
         //console.log( "ar param : ","AR=", ar, "Param=",Params.getParam(Project.AR_PARAM_ID));
-
-        this.updateSpaceAR(ar);
+        if( ar != undefined)
+            this.updateSpaceAR(ar);
         
 
         this.build = new Build(this.modules);
@@ -140,7 +140,10 @@ class Designer extends Group
         
         const msg:{}={};
         this.currentAR = ar;
-        msg[Project.AR_PARAM_ID] = BigInt( Object.values(RunAR).indexOf(ar) );
+        //console.log( "CurrentAR = ", ar);
+
+        //msg[Project.AR_PARAM_ID] = BigInt( Object.values(RunAR).indexOf(ar) );
+        msg[Project.AR_PARAM_ID] = Object.values(RunAR).indexOf(ar);
 
         if( Project.GetContext() == FXContext.MINTING)
             Params.snippet.emit(Params.UPDATE_SIGNAL, msg );
@@ -351,8 +354,10 @@ class Designer extends Group
 
         const msg:{} = {};
         msg[Project.CONFIG_PARAM_ID] = str;
-        msg[Project.AR_PARAM_ID] = BigInt( Object.values(RunAR).indexOf(this.currentAR) );
-        msg[Project.PALETTE_PARAM_ID] = BigInt( Palette.selectedPalette );
+        //msg[Project.AR_PARAM_ID] = BigInt( Object.values(RunAR).indexOf(this.currentAR) );
+        msg[Project.AR_PARAM_ID] = Object.values(RunAR).indexOf(this.currentAR);
+        //msg[Project.PALETTE_PARAM_ID] = BigInt( Palette.selectedPalette );
+        msg[Project.PALETTE_PARAM_ID] = Palette.selectedPalette;
         msg[Project.SX_PARAM_ID] = this.launchPosition.x;
         msg[Project.SY_PARAM_ID] = this.launchPosition.y;
 
